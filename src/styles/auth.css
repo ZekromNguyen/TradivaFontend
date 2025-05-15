@@ -1,0 +1,157 @@
+/* Các style chung cho trang đăng nhập và đăng ký */
+.auth-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  padding: 2rem 1rem;
+}
+
+.bg-travel {
+  background-image: url('/travel-bg.jpg');
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.3) 100%);
+  z-index: 0;
+}
+
+.auth-form-container {
+  width: 100%;
+  max-width: 450px;
+  padding: 2.5rem;
+  border-radius: 1rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.input-field {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  transition: all 0.3s ease;
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+.btn-primary {
+  width: 100%;
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(90deg, #4F46E5, #6366F1);
+  color: white;
+  font-weight: 500;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.social-login-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem;
+  background-color: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #4b5563;
+  transition: all 0.3s ease;
+}
+
+.gradient-text {
+  background: linear-gradient(90deg, #4F46E5, #EC4899);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Logo animation */
+.logo-animation {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+/* Title animations */
+.title-animation {
+  animation: fadeIn 0.8s ease-out 0.2s both;
+}
+
+.subtitle-animation {
+  animation: fadeIn 0.8s ease-out 0.4s both;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Link animation */
+.link-animation {
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.link-animation::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: -2px;
+  left: 0;
+  background: linear-gradient(90deg, #4F46E5, #EC4899);
+  transition: width 0.3s ease;
+}
+
+.link-animation:hover::after {
+  width: 100%;
+}
+
+/* Checkbox animation */
+.checkbox-animation {
+  transition: all 0.2s ease;
+}
+
+.checkbox-animation:checked {
+  transform: scale(1.1);
+}
+
+/* Đảm bảo biểu tượng hiển thị đúng */
+.fa-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  stroke-width: 0;
+  stroke: currentColor;
+  fill: currentColor;
+}
