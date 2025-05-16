@@ -1,0 +1,244 @@
+/* Header animations and styles */
+.nav-link {
+  position: relative !important;
+  font-weight: 500 !important;
+  padding: 0.5rem 0.75rem !important;
+  display: flex !important;
+  align-items: center !important;
+  transition: transform 0.3s ease, color 0.3s ease !important;
+  color: white !important;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 3px;
+  bottom: -5px;
+  left: 0;
+  background: white;
+  transition: width 0.3s ease;
+  border-radius: 2px;
+}
+
+.nav-link:hover::after,
+.active-link::after {
+  width: 100%;
+}
+
+/* Notification badge pulse */
+@keyframes pulse {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+  }
+  
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 6px rgba(239, 68, 68, 0);
+  }
+  
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+  }
+}
+
+.notification-badge {
+  position: absolute !important;
+  top: -5px !important;
+  right: -5px !important;
+  min-width: 18px !important;
+  height: 18px !important;
+  padding: 0 5px !important;
+  background-color: #ef4444 !important;
+  border: 2px solid #4f46e5 !important;
+  border-radius: 9999px !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  color: white !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  animation: pulse 2s infinite !important;
+}
+
+/* Hover effect for menu items */
+.nav-link:hover {
+  transform: translateY(-2px);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Smooth scrolling for the whole page */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  .nav-link {
+    padding: 0.5rem 0.5rem;
+  }
+}
+
+/* Dropdown menu animation */
+.dropdown-menu {
+  transform-origin: top;
+  animation: dropdownFade 0.2s ease-in-out;
+  z-index: 50;
+}
+
+@keyframes dropdownFade {
+  from {
+    opacity: 0;
+    transform: scaleY(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+}
+
+/* Mobile menu backdrop */
+.mobile-menu-backdrop {
+  backdrop-filter: blur(5px);
+  z-index: 40;
+}
+
+/* Fix search and notification buttons */
+.search-button,
+.notification-button {
+  position: relative !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 40px !important;
+  height: 40px !important;
+  background-color: rgba(255, 255, 255, 0.2) !important; /* Tăng độ tương phản */
+  border-radius: 50% !important;
+  transition: all 0.3s ease !important;
+  margin-left: 0.5rem !important;
+  color: white !important;
+  border: none !important;
+  cursor: pointer !important;
+  z-index: 10 !important; /* Đảm bảo nút hiển thị trên các phần tử khác */
+}
+
+.search-button:hover,
+.notification-button:hover {
+  background-color: rgba(255, 255, 255, 0.3) !important;
+  transform: translateY(-2px) !important;
+}
+
+.search-button svg,
+.notification-button svg {
+  width: 20px !important;
+  height: 20px !important;
+  color: white !important;
+  display: inline-block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  fill: currentColor !important;
+  pointer-events: none !important;
+  min-width: 20px !important;
+  min-height: 20px !important;
+}
+
+/* Tăng độ tương phản cho nút tìm kiếm */
+.search-button {
+  background-color: rgba(255, 255, 255, 0.4) !important;
+  z-index: 101 !important;
+  position: relative !important;
+  overflow: visible !important;
+}
+
+/* Đảm bảo biểu tượng FaSearch hiển thị */
+.search-button * {
+  display: inline-block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Sửa lỗi khoảng trắng giữa header và main */
+body {
+  padding-top: 0 !important;
+  margin-top: 0 !important;
+}
+
+/* Đảm bảo header có chiều cao cố định và position fixed */
+header {
+  background-color: #4f46e5 !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1) !important;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  z-index: 100 !important;
+  height: 80px !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* Đảm bảo các icon hiển thị đúng */
+header svg {
+  display: inline-block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Đảm bảo các icon hiển thị đúng */
+.h-5, .w-5, .h-6, .w-6 {
+  display: inline-flex !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* Menu alignment */
+nav ul {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+nav ul li {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+/* Ensure icons display correctly */
+.nav-link svg {
+  display: inline-flex !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  vertical-align: middle;
+  margin-right: 0.25rem;
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+/* Đảm bảo biểu tượng tìm kiếm hiển thị đúng */
+.search-icon {
+  width: 20px !important;
+  height: 20px !important;
+  color: white !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  fill: currentColor !important;
+}
+
+/* Tăng độ tương phản cho nút tìm kiếm */
+.search-button {
+  background-color: rgba(255, 255, 255, 0.3) !important;
+}
