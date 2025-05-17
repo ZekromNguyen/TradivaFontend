@@ -1,7 +1,13 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { lazy, Suspense } from 'react';
 import MainLayout from '../layouts/MainLayout';
-import AuthPage from '../pages/AuthPage';
-import HomePage from '../pages/HomePage';
+
+// Lazy load các components
+const HomePage = lazy(() => import('../pages/HomePage/HomePage'));
+const AuthPage = lazy(() => import('../pages/AuthPage/AuthPage'));
+
+// Loading component
+const Loading = () => <div className="flex items-center justify-center h-screen">Đang tải...</div>;
 
 // Tạo router với các routes
 const router = createBrowserRouter([
@@ -11,15 +17,27 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: <HomePage />,
+        element: (
+          <Suspense fallback={<Loading />}>
+            <HomePage />
+          </Suspense>
+        ),
       },
       {
         path: '/login',
-        element: <AuthPage />,
+        element: (
+          <Suspense fallback={<Loading />}>
+            <AuthPage />
+          </Suspense>
+        ),
       },
       {
         path: '/register',
-        element: <AuthPage initialMode="register" />,
+        element: (
+          <Suspense fallback={<Loading />}>
+            <AuthPage initialMode="register" />
+          </Suspense>
+        ),
       },
     ],
   },

@@ -5,7 +5,7 @@ import { motion as Motion } from 'framer-motion';
 import { toast, ToastContainer } from 'react-toastify';
 import { FaUser, FaEnvelope, FaLock, FaEye, FaEyeSlash, FaGoogle, FaGlobeAmericas, FaSpinner, FaPhone, FaUserAlt } from 'react-icons/fa';
 import 'react-toastify/dist/ReactToastify.css';
-import '../../styles/auth.css';
+import '../../../pages/AuthPage/AuthPage.css';
 import './Register.css';
 import { Link } from 'react-router-dom';
 

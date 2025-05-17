@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion as Motion } from 'framer-motion';
 import { FaGlobeAmericas, FaBell, FaUserCircle, FaSearch, FaCompass, FaUserTie, FaPhoneAlt, FaBars, FaTimes } from 'react-icons/fa';
@@ -6,6 +6,7 @@ import './Header.css';
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
   
   // Kiểm tra đường dẫn hiện tại để highlight menu item
@@ -13,6 +14,20 @@ const Header = () => {
     return location.pathname === path;
   };
 
+  // Thêm event listener để theo dõi scroll
+  useEffect(() => {
+    const handleScroll = () => {
+      const isScrolled = window.scrollY > 100;
+      if (isScrolled !== scrolled) {
+        setScrolled(isScrolled);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [scrolled]);
   
   const logoVariants = {
     hidden: { opacity: 0, scale: 0.8 },
@@ -69,7 +84,7 @@ const Header = () => {
   };
   
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-blue-600 py-3 shadow-md">
+    <header className={`fixed top-0 left-0 right-0 z-50 py-3 transition-all duration-500 ${scrolled ? 'scrolled' : 'transparent'}`}>
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
@@ -90,7 +105,7 @@ const Header = () => {
             </Link>
           </div>
           
-          {/* Desktop Navigation - Centered */}
+          {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center justify-center flex-grow">
             <ul className="flex space-x-10">
               <li>

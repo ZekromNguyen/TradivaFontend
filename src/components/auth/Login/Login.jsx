@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { motion as Motion } from 'framer-motion';
 import { FaEye, FaEyeSlash, FaGoogle, FaGlobeAmericas, FaSpinner } from 'react-icons/fa';
-import '../../styles/auth.css';
 import './Login.css';
+import '../../../pages/AuthPage/AuthPage.css';
 import { Link } from 'react-router-dom';
 
 const Login = () => {

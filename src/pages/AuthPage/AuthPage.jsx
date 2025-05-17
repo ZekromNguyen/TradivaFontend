@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import Login from '../components/auth/Login';
-import Register from '../components/auth/Register';
+import Login from '../../components/auth/Login/Login';
+import Register from '../../components/auth/Register/Register';
 
 const AuthPage = ({ initialMode }) => {
   const [isLogin, setIsLogin] = useState(initialMode !== 'register');

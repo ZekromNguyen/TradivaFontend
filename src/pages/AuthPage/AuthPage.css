@@ -8,10 +8,7 @@
   background-position: center;
   position: relative;
   padding: 2rem 1rem;
-}
-
-.bg-travel {
-  background-image: url('/travel-bg.jpg');
+  z-index: 10; /* Đảm bảo container hiển thị trên các phần tử khác */
 }
 
 .overlay {
@@ -24,6 +21,22 @@
   z-index: 0;
 }
 
+/* Đảm bảo biểu tượng hiển thị đúng */
+.fa-icon {
+  display: inline-block !important;
+  width: 1em !important;
+  height: 1em !important;
+  stroke-width: 0 !important;
+  stroke: currentColor !important;
+  fill: currentColor !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.bg-travel {
+  background-image: url('/travel-bg.jpg');
+}
+
 .auth-form-container {
   width: 100%;
   max-width: 450px;
@@ -32,7 +45,9 @@
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
   position: relative;
   z-index: 1;
-  overflow: hidden;
+  overflow: visible; /* Thay đổi từ overflow: hidden thành overflow: visible */
+  background-color: rgba(255, 255, 255, 0.9);
+  margin: 3rem 0; /* Thêm margin để tạo khoảng cách */
 }
 
 .input-field {
@@ -144,14 +159,4 @@
 
 .checkbox-animation:checked {
   transform: scale(1.1);
-}
-
-/* Đảm bảo biểu tượng hiển thị đúng */
-.fa-icon {
-  display: inline-block;
-  width: 1em;
-  height: 1em;
-  stroke-width: 0;
-  stroke: currentColor;
-  fill: currentColor;
 }

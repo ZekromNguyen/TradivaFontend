@@ -1,0 +1,117 @@
+/* Process Flow Component Styles */
+.process-steps {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  margin: 2rem 0;
+}
+
+.process-step-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 25%;
+  position: relative;
+  z-index: 2;
+}
+
+.process-icon-container {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #4F46E5, #6366F1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  position: relative;
+  box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.3);
+}
+
+.process-icon {
+  color: white;
+  font-size: 2rem;
+}
+
+.process-title {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  position: relative;
+}
+
+.process-title::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 2px;
+  background: linear-gradient(90deg, #4F46E5, #6366F1);
+}
+
+.process-description {
+  color: #6B7280;
+  font-size: 0.875rem;
+}
+
+.process-line {
+  position: absolute;
+  top: 40px;
+  left: 10%;
+  right: 10%;
+  height: 2px;
+  background: #E5E7EB;
+  z-index: 1;
+}
+
+.process-connector {
+  position: absolute;
+  top: 31px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: #E5E7EB;
+  z-index: 1;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .process-steps {
+    flex-direction: column;
+    gap: 30px;
+  }
+  
+  .process-step-item {
+    width: 100%;
+    margin-bottom: 30px;
+    flex-direction: row;
+    text-align: left;
+    align-items: flex-start;
+  }
+  
+  .process-icon-container {
+    margin-bottom: 0;
+    margin-right: 20px;
+    width: auto;
+  }
+  
+  .process-icon {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .process-line {
+    display: none;
+  }
+  
+  .process-connector {
+    display: none;
+  }
+  
+  .process-title::after {
+    left: 0;
+    transform: none;
+  }
+}

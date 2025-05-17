@@ -172,16 +172,92 @@ body {
 
 /* Đảm bảo header có chiều cao cố định và position fixed */
 header {
-  background-color: #4f46e5 !important;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1) !important;
   position: fixed !important;
   top: 0 !important;
   left: 0 !important;
   right: 0 !important;
-  z-index: 100 !important;
-  height: 80px !important;
+  z-index: 50 !important; /* Giảm z-index để không che phủ form đăng ký */
   display: flex !important;
   align-items: center !important;
+  transition: all 0.5s ease-in-out !important;
+  height: auto !important;
+}
+
+header.transparent {
+  background-color: transparent !important;
+  box-shadow: none !important;
+  padding: 1.5rem 0 !important;
+}
+
+header.scrolled {
+  background-color: #4f46e5 !important;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1) !important;
+  padding: 0.75rem 0 !important;
+}
+
+/* Hiển thị tất cả các phần tử trong header */
+header nav,
+header .flex.items-center.space-x-4 {
+  opacity: 1 !important;
+  visibility: visible !important;
+  height: auto !important;
+  overflow: visible !important;
+  transition: all 0.5s ease-in-out !important;
+}
+
+/* Xóa bỏ các quy tắc ẩn menu khi không cuộn */
+header.transparent nav,
+header.transparent .flex.items-center.space-x-4 {
+  opacity: 1 !important;
+  visibility: visible !important;
+  height: auto !important;
+  overflow: visible !important;
+}
+
+/* Đảm bảo logo luôn hiển thị */
+header .flex-shrink-0 {
+  transition: all 0.5s ease-in-out !important;
+  width: 25% !important;
+}
+
+/* Đảm bảo logo ở bên trái */
+header .flex-shrink-0 {
+  justify-content: flex-start !important;
+}
+
+/* .nav-link, header h1, header svg {
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Đảm bảo logo luôn hiển thị */
+header .flex-shrink-0 {
+  transition: all 0.5s ease-in-out !important;
+}
+
+/* Hiệu ứng mượt mà cho các phần tử */
+header nav,
+header .flex.items-center.space-x-4 {
+  transition: all 0.5s ease-in-out !important;
+}
+
+/* Đảm bảo các phần tử không chiếm không gian khi ẩn */
+header.transparent nav.opacity-0,
+header.transparent .flex.items-center.space-x-4.opacity-0 {
+  margin: 0 !important;
+  padding: 0 !important;
+  height: 0 !important;
+  overflow: hidden !important;
+}
+
+/* Đảm bảo logo ở giữa khi không cuộn */
+header.transparent .flex-shrink-0.w-full {
+  display: flex !important;
+  justify-content: center !important;
+}
+
+/* Đảm bảo logo ở bên trái khi cuộn */
+header.scrolled .flex-shrink-0.w-1\/4 {
+  justify-content: flex-start !important;
 }
 
 /* Đảm bảo các icon hiển thị đúng */
@@ -189,6 +265,19 @@ header svg {
   display: inline-block !important;
   visibility: visible !important;
   opacity: 1 !important;
+}
+
+/* Thêm màu nền cho các nút để dễ nhìn hơn trên nền trong suốt */
+.search-button {
+  background-color: rgba(255, 255, 255, 0.2) !important;
+  border-radius: 50% !important;
+  padding: 8px !important;
+}
+
+.notification-button {
+  background-color: rgba(255, 255, 255, 0.2) !important;
+  border-radius: 50% !important;
+  padding: 8px !important;
 }
 
 /* Đảm bảo các icon hiển thị đúng */
