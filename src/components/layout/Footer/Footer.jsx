@@ -40,17 +40,11 @@ const Footer = () => {
               Tradiva - Đối tác du lịch đáng tin cậy của bạn. Chúng tôi mang đến những trải nghiệm du lịch tuyệt vời với dịch vụ chuyên nghiệp và giá cả hợp lý.
             </p>
             <div className="flex space-x-4">
-              <a href="#" className="bg-blue-600 hover:bg-blue-700 h-10 w-10 rounded-full flex items-center justify-center transition-colors duration-300">
+              <a href="https://www.facebook.com/profile.php?id=61576848084752" className="bg-blue-600 hover:bg-blue-700 h-10 w-10 rounded-full flex items-center justify-center transition-colors duration-300">
                 <FaFacebookF />
               </a>
-              <a href="#" className="bg-blue-400 hover:bg-blue-500 h-10 w-10 rounded-full flex items-center justify-center transition-colors duration-300">
-                <FaTwitter />
-              </a>
-              <a href="#" className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 h-10 w-10 rounded-full flex items-center justify-center transition-colors duration-300">
+              <a href="https://www.instagram.com/tradiva17?igsh=MjFhbzRtbWlobzgy" className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 h-10 w-10 rounded-full flex items-center justify-center transition-colors duration-300">
                 <FaInstagram />
-              </a>
-              <a href="#" className="bg-blue-700 hover:bg-blue-800 h-10 w-10 rounded-full flex items-center justify-center transition-colors duration-300">
-                <FaLinkedinIn />
               </a>
             </div>
           </Motion.div>

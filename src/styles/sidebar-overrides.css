@@ -1,0 +1,159 @@
+/* Global overrides for Tradiva sidebar - This fixes Tailwind conflicts */
+
+/* Fix for text color in sidebar */
+.tradiva-body .tradiva-sidebar a,
+.tradiva-body .tradiva-sidebar button,
+.tradiva-body .tradiva-sidebar span,
+.tradiva-body .tradiva-sidebar p,
+.tradiva-body .tradiva-sidebar h1,
+.tradiva-body .tradiva-sidebar h2,
+.tradiva-body .tradiva-sidebar h3,
+.tradiva-body .tradiva-sidebar h4,
+.tradiva-body .tradiva-sidebar h5,
+.tradiva-body .tradiva-sidebar h6,
+.tradiva-body .tradiva-sidebar div {
+  color: inherit;
+}
+
+/* Force specific colors for sidebar elements */
+.tradiva-body .tradiva-sidebar .nav-link {
+  color: #4b5563 !important;
+}
+
+.tradiva-body .tradiva-sidebar .nav-link:hover {
+  color: #111827 !important;
+}
+
+.tradiva-body .tradiva-sidebar .nav-link.active {
+  color: #3b82f6 !important;
+  background-color: #eff6ff !important;
+}
+
+.tradiva-body .tradiva-sidebar .logo-icon {
+  color: white !important;
+}
+
+.tradiva-body .tradiva-sidebar .logo-text {
+  color: #3b82f6 !important;
+}
+
+.tradiva-body .tradiva-sidebar .toggle-sidebar-btn {
+  color: #4b5563 !important;
+  background-color: #f3f4f6 !important;
+  border: none !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  z-index: 100 !important;
+  position: relative !important;
+}
+
+.tradiva-body .tradiva-sidebar .toggle-sidebar-btn svg {
+  color: #4b5563 !important;
+  display: block !important;
+}
+
+/* Fix for collapsed sidebar toggle */
+.tradiva-body .tradiva-sidebar.collapsed .toggle-sidebar-btn {
+  position: absolute !important;
+  right: -15px !important; 
+  top: 20px !important;
+  margin: 0 !important;
+  background-color: #f3f4f6 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06) !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  display: flex !important;
+  border-radius: 0.375rem !important;
+}
+
+.tradiva-body .tradiva-sidebar.collapsed .toggle-sidebar-btn svg {
+  color: #4b5563 !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.tradiva-body .tradiva-sidebar .logout-link {
+  color: #ef4444 !important;
+}
+
+/* Fix for icon colors */
+.tradiva-body .tradiva-sidebar svg {
+  color: currentColor !important;
+  fill: currentColor !important;
+}
+
+/* Override any Tailwind text-white classes */
+.tradiva-body .tradiva-sidebar .text-white,
+.tradiva-body .tradiva-sidebar [class*="text-white"] {
+  color: inherit !important;
+}
+
+/* Make sure nothing important is inheriting Tailwind's text-white */
+.tradiva-body .tradiva-sidebar * {
+  color: inherit;
+}
+
+/* Specific fix for icons */
+.tradiva-sidebar .nav-link .nav-icon {
+  color: currentColor !important;
+}
+
+.tradiva-sidebar .nav-link.active .nav-icon {
+  color: #3b82f6 !important;
+}
+
+.tradiva-sidebar .logout-link .logout-icon {
+  color: #ef4444 !important;
+}
+
+/* Icon container styling */
+.tradiva-sidebar .nav-icon-container,
+.tradiva-sidebar .logout-icon-container {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 20px !important;
+  height: 20px !important;
+  flex-shrink: 0 !important;
+}
+
+/* Fix collapsed sidebar styling */
+.tradiva-sidebar.collapsed .nav-link {
+  justify-content: center !important;
+  padding: 0.5rem !important;
+}
+
+.tradiva-sidebar.collapsed .nav-icon-container {
+  width: 20px !important;
+  height: 20px !important;
+  margin: 0 !important;
+}
+
+/* Fix for collapsed sidebar toggle button */
+.tradiva-dashboard .sidebar.collapsed .toggle-sidebar-btn {
+  position: absolute !important;
+  right: -15px !important;
+  top: 20px !important;
+  margin: 0 !important;
+  width: 30px !important;
+  height: 30px !important;
+  background-color: #f3f4f6 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  z-index: 100 !important;
+}
+
+/* Fix for sidebar z-index to ensure it's above content */
+.tradiva-body .tradiva-sidebar {
+  z-index: 50 !important; 
+  overflow: visible !important;
+}
+
+/* Fix for icons to ensure they're visible in the sidebar */
+.tradiva-body .tradiva-sidebar .nav-icon {
+  visibility: visible !important;
+  opacity: 1 !important;
+} 

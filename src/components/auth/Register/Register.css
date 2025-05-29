@@ -28,6 +28,96 @@
   animation: checkmark 0.2s ease-in-out;
 }
 
+/* Direct styling for input container and input icon */
+.input-icon-container {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  position: absolute !important;
+  left: 12px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  width: 20px !important;
+  height: 20px !important;
+  pointer-events: none !important;
+  z-index: 5 !important;
+}
+
+/* Fix for input icons */
+.input-icon, 
+.register-icon {
+  color: #9ca3af !important;
+  fill: #9ca3af !important;
+  stroke: none !important;
+  width: 16px !important;
+  height: 16px !important;
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Fix for eye icons in password fields */
+.eye-icon {
+  color: #9ca3af !important;
+  fill: #9ca3af !important;
+  width: 18px !important;
+  height: 18px !important;
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.eye-icon-container {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  z-index: 10 !important;
+  position: absolute !important;
+  right: 10px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  cursor: pointer !important;
+}
+
+/* Force icons to be visible in all browsers */
+.input-icon-container svg,
+.register-icon svg,
+.eye-icon-container svg,
+.eye-icon svg {
+  color: #9ca3af !important;
+  fill: #9ca3af !important;
+  width: 16px !important;
+  height: 16px !important;
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Fix for Safari browser icon visibility */
+@media not all and (min-resolution:.001dpcm) { 
+  @supports (-webkit-appearance:none) {
+    .input-icon-container svg, 
+    .register-icon,
+    .register-icon svg,
+    .eye-icon,
+    .eye-icon svg {
+      opacity: 1 !important;
+      color: #9ca3af !important;
+      fill: #9ca3af !important;
+      stroke: none !important;
+      filter: none !important;
+      -webkit-filter: none !important;
+    }
+  }
+}
+
+/* Add increased specificity for input fields with icons */
+input.pl-10 {
+  padding-left: 2.5rem !important;
+}
+
 @keyframes slideInRight {
   from {
     opacity: 0;
@@ -103,15 +193,78 @@
   }
 }
 
+/* Ensure input container is positioned correctly */
 .input-container {
   position: relative;
   margin-bottom: 1rem;
 }
 
+/* Style for the input icon container */
+.input-icon-container {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* Ensure icons are visible and styled correctly */
+.input-icon-container svg,
+.register-icon {
+  color: #9ca3af;
+  fill: #9ca3af;
+  width: 16px;
+  height: 16px;
+  display: block;
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Fix for eye icon in password fields */
+.eye-icon-container {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.eye-icon {
+  color: #9ca3af;
+  fill: #9ca3af;
+  width: 18Vy;
+  height: 18px;
+  display: block;
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Ensure input field padding accounts for the icon */
+.input-field {
+  width: 100%;
+  padding: 0.75rem 1rem 0.75rem 2.5rem; /* Adjusted padding to account for icon */
+  border: 1px solid #D1D5DB;
+  border-radius: 0.5rem;
+  background-color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(5px);
+  font-size: 0.875rem;
+}
+
+/* Floating label adjustments */
 .floating-label {
   position: absolute;
   pointer-events: none;
-  left: 10px;
+  left: 40px; /* Adjusted to avoid overlapping with the icon */
   top: 50%;
   transform: translateY(-50%);
   transition: 0.2s ease all;
@@ -122,16 +275,6 @@
   z-index: 1;
 }
 
-.input-field {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  border: 1px solid #D1D5DB;
-  border-radius: 0.5rem;
-  background-color: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(5px);
-  font-size: 0.875rem;
-}
-
 .input-field:focus + .floating-label,
 .input-field:not(:placeholder-shown) + .floating-label {
   top: 0;
@@ -139,22 +282,11 @@
   color: #4F46E5;
   background-color: white;
   z-index: 2;
+  left: 10px; /* Adjusted position when focused */
 }
-
-/* Đảm bảo icon không bị che khuất */
+/* Ensure icon isn't hidden */
 .input-container .absolute {
   z-index: 1;
-}
-
-/* Password visibility toggle */
-.password-toggle {
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  cursor: pointer;
-  color: #6B7280;
-  z-index: 3;
 }
 
 /* Button pulse effect */
@@ -247,17 +379,21 @@
   transform: scale(1.1);
 }
 
-/* Đảm bảo biểu tượng hiển thị đúng */
+/* Enhanced SVG visibility */
 svg {
   display: inline-block !important;
   opacity: 1 !important;
   visibility: visible !important;
+  color: currentColor !important;
+  fill: currentColor !important;
 }
 
-.react-icons {
+/* Fix for all React Icons */
+[class*="fa-"],
+[class*="Fa"] {
   display: inline-block !important;
-  opacity: 1 !important;
   visibility: visible !important;
+  opacity: 1 !important;
 }
 
 /* Đảm bảo form đăng ký hiển thị đúng */
@@ -268,34 +404,7 @@ svg {
   border-radius: 1rem;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
   position: relative;
-  z-index: 100 !important; /* Tăng z-index để hiển thị trên header */
+  z-index: 100;
   overflow: hidden;
   background-color: rgba(255, 255, 255, 0.9);
-}
-
-/* Sửa lỗi hiển thị cho các trường input */
-.input-field {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  border: 1px solid #D1D5DB;
-  border-radius: 0.5rem;
-  background-color: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(5px);
-  font-size: 0.875rem;
-  position: relative;
-  z-index: 1;
-}
-
-/* Sửa lỗi hiển thị cho nút mật khẩu */
-.password-toggle {
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  cursor: pointer;
-  color: #6B7280;
-  z-index: 3;
-  display: inline-block !important;
-  visibility: visible !important;
-  opacity: 1 !important;
 }

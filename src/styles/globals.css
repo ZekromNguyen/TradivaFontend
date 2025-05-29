@@ -1,3 +1,54 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Fix for Tailwind overriding colors */
+.tradiva-sidebar *,
+.tradiva-sidebar a,
+.tradiva-sidebar button,
+.tradiva-sidebar span,
+.tradiva-sidebar div,
+.tradiva-sidebar p,
+.tradiva-sidebar h1,
+.tradiva-sidebar h2,
+.tradiva-sidebar h3,
+.tradiva-sidebar h4,
+.tradiva-sidebar h5,
+.tradiva-sidebar h6 {
+  @apply !text-inherit;
+}
+
+/* Sidebar specific overrides */
+.tradiva-sidebar .nav-link {
+  @apply !text-gray-600;
+}
+
+.tradiva-sidebar .nav-link:hover {
+  @apply !text-gray-800;
+}
+
+.tradiva-sidebar .nav-link.active {
+  @apply !text-blue-500 !bg-blue-50;
+}
+
+.tradiva-sidebar .logo-icon {
+  @apply !text-white;
+}
+
+.tradiva-sidebar .logo-text {
+  @apply !text-blue-500;
+}
+
+/* Force all sidebar children to use proper colors */
+.tradiva-sidebar * {
+  color: inherit !important;
+}
+
+/* Ensure text visibility */
+.tradiva-sidebar .nav-text,
+.tradiva-sidebar .logo-text,
+.tradiva-sidebar .logout-text {
+  visibility: visible !important;
+  opacity: 1 !important;
+  color: inherit !important;
+}

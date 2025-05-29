@@ -1,14 +1,15 @@
-/* Các style chung cho trang đăng nhập và đăng ký */
 .auth-container {
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 1rem;
+  position: relative;
+  padding-top: 50px;
+  background-image: url('/images/travel-bg.jpg'); /* Ensure background is set */
   background-size: cover;
   background-position: center;
-  position: relative;
-  padding: 2rem 1rem;
-  z-index: 10; /* Đảm bảo container hiển thị trên các phần tử khác */
+  background-repeat: no-repeat;
 }
 
 .overlay {
@@ -17,98 +18,216 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.3) 100%);
+  background: rgba(0, 0, 0, 0.3); /* Increased opacity for better contrast */
   z-index: 0;
 }
 
-/* Đảm bảo biểu tượng hiển thị đúng */
-.fa-icon {
-  display: inline-block !important;
-  width: 1em !important;
-  height: 1em !important;
-  stroke-width: 0 !important;
-  stroke: currentColor !important;
-  fill: currentColor !important;
-  visibility: visible !important;
-  opacity: 1 !important;
+/* Form wrapper with sticky positioning */
+.form-wrapper {
+  position: sticky;
+  top: 50px; /* Match the padding-top of auth-container */
+  width: 100%;
+  max-width: 450px;
+  z-index: 1;
 }
 
-.bg-travel {
-  background-image: url('/travel-bg.jpg');
-}
-
+/* Form container */
 .auth-form-container {
   width: 100%;
   max-width: 450px;
   padding: 2.5rem;
   border-radius: 1rem;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
   position: relative;
-  z-index: 1;
-  overflow: visible; /* Thay đổi từ overflow: hidden thành overflow: visible */
-  background-color: rgba(255, 255, 255, 0.9);
-  margin: 3rem 0; /* Thêm margin để tạo khoảng cách */
+  z-index: 10; /* Lower than header's z-index (100) */
+  isolation: isolate;
+  overflow: hidden;
+  background-color: rgba(255, 255, 255, 1); /* Removed transparency to avoid see-through effect */
+  transform: translateZ(0);
+  box-sizing: border-box;
 }
 
-.input-field {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  border: 1px solid #e5e7eb;
-  border-radius: 0.5rem;
-  font-size: 1rem;
-  line-height: 1.5;
-  transition: all 0.3s ease;
-  background-color: rgba(255, 255, 255, 0.8);
+/* Remove the fixed-form class */
+.auth-form-container.fixed-form {
+  position: static; /* No longer needed */
+  top: auto;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .auth-container {
+    padding-top: 80px;
+  }
+  .form-wrapper {
+    top: 80px;
+    width: 90%;
+    margin: 0 auto;
+  }
+  .auth-form-container {
+    padding: 1.5rem;
+    width: 100%;
+  }
+}
+
+
+/* Enhanced icons visibility for all auth pages */
+.login-icon, 
+.register-icon, 
+.eye-icon,
+[class*="fa-"],
+[class*="Fa"] {
+  color: #9ca3af !important;
+  fill: #9ca3af !important;
+  stroke: none !important;
+  width: 16px !important;
+  height: 16px !important;
+  display: inline-block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Input fields icon containers */
+.input-icon-container {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  position: absolute !important;
+  left: 12px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  width: 20px !important;
+  height: 20px !important;
+  pointer-events: none !important;
+  z-index: 5 !important;
+}
+
+/* Eye icon containers */
+.eye-icon-container {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  position: absolute !important;
+  right: 10px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  z-index: 10 !important;
+  cursor: pointer !important;
+}
+
+/* Make sure SVG elements display properly */
+svg {
+  display: inline-block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Fix for React Icons components */
+svg[data-testid="test-icon"],
+svg.svg-inline--fa {
+  display: inline-block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  color: inherit !important;
+  fill: currentColor !important;
+}
+
+/* Fix for browsers that hide SVGs */
+@media all {
+  svg {
+    display: inline-block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+}
+
+/* Brand styles */
+.gradient-text {
+  background: linear-gradient(45deg, #4F46E5, #EC4899);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+}
+
+.logo-animation {
+  animation: floatEffect 3s ease-in-out infinite;
+}
+
+@keyframes floatEffect {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+/* Theme colors */
+.bg-primary {
+  background-color: #4F46E5 !important;
+}
+
+.bg-primary-dark {
+  background-color: #4338CA !important;
+}
+
+.text-primary {
+  color: #4F46E5 !important;
+}
+
+.text-primary-dark {
+  color: #4338CA !important;
 }
 
 .btn-primary {
   width: 100%;
-  padding: 0.75rem 1.5rem;
-  background: linear-gradient(90deg, #4F46E5, #6366F1);
+  padding: 0.75rem 1rem;
+  background-color: #4F46E5;
   color: white;
-  font-weight: 500;
   border-radius: 0.5rem;
+  font-weight: 500;
   border: none;
-  cursor: pointer;
   transition: all 0.3s ease;
-}
-
-.social-login-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0.75rem;
-  background-color: white;
-  border: 1px solid #e5e7eb;
-  border-radius: 0.5rem;
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: #4b5563;
+}
+
+.btn-primary:hover {
+  background-color: #4338CA;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
+}
+
+.btn-primary:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.4);
+}
+
+.btn-primary:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Link animations */
+.link-animation {
+  position: relative;
   transition: all 0.3s ease;
 }
 
-.gradient-text {
+.link-animation::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: -2px;
+  left: 0;
   background: linear-gradient(90deg, #4F46E5, #EC4899);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  transition: width 0.3s ease;
 }
 
-/* Logo animation */
-.logo-animation {
-  animation: float 3s ease-in-out infinite;
-}
-
-@keyframes float {
-  0% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-  100% {
-    transform: translateY(0px);
-  }
+.link-animation:hover::after {
+  width: 100%;
 }
 
 /* Title animations */
@@ -131,27 +250,6 @@
   }
 }
 
-/* Link animation */
-.link-animation {
-  position: relative;
-  transition: all 0.3s ease;
-}
-
-.link-animation::after {
-  content: '';
-  position: absolute;
-  width: 0;
-  height: 2px;
-  bottom: -2px;
-  left: 0;
-  background: linear-gradient(90deg, #4F46E5, #EC4899);
-  transition: width 0.3s ease;
-}
-
-.link-animation:hover::after {
-  width: 100%;
-}
-
 /* Checkbox animation */
 .checkbox-animation {
   transition: all 0.2s ease;
@@ -159,4 +257,25 @@
 
 .checkbox-animation:checked {
   transform: scale(1.1);
+}
+
+/* Fix for specific icon types that might need additional styling */
+.input-field-icon {
+  color: #9ca3af !important;
+  fill: #9ca3af !important;
+}
+
+/* Social login button */
+.social-login-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem;
+  background-color: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #4b5563;
+  transition: all 0.3s ease;
 }

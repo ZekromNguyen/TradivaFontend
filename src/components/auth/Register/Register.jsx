@@ -106,6 +106,24 @@ const Register = () => {
     visible: { y: 0, opacity: 1 }
   };
 
+  // Common style for icons
+  const iconStyle = { 
+    color: '#9ca3af', 
+    fill: '#9ca3af',
+    width: '16px',
+    height: '16px',
+    display: 'block'
+  };
+
+  // Eye icon style
+  const eyeIconStyle = {
+    color: '#9ca3af',
+    fill: '#9ca3af',
+    width: '18px',
+    height: '18px',
+    display: 'block'
+  };
+
   return (
     <div className="auth-container bg-travel">
       <div className="overlay"></div>
@@ -148,9 +166,9 @@ const Register = () => {
           <div className="space-y-4">
             <Motion.div className="input-container" variants={itemVariants}>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                
-                </div>
+                <span className="input-icon-container">
+                  <FaUserAlt className="register-icon" style={iconStyle} />
+                </span>
                 <input
                   id="fullName"
                   name="fullName"
@@ -180,9 +198,9 @@ const Register = () => {
             {/* Thêm trường Username */}
             <Motion.div className="input-container" variants={itemVariants}>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  
-                </div>
+                <span className="input-icon-container">
+                  <FaUser className="register-icon" style={iconStyle} />
+                </span>
                 <input
                   id="username"
                   name="username"
@@ -212,9 +230,9 @@ const Register = () => {
             {/* Thêm trường Số điện thoại */}
             <Motion.div className="input-container" variants={itemVariants}>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                
-                </div>
+                <span className="input-icon-container">
+                  <FaPhone className="register-icon" style={iconStyle} />
+                </span>
                 <input
                   id="phoneNumber"
                   name="phoneNumber"
@@ -243,9 +261,9 @@ const Register = () => {
             
             <Motion.div className="input-container" variants={itemVariants}>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  
-                </div>
+                <span className="input-icon-container">
+                  <FaEnvelope className="register-icon" style={iconStyle} />
+                </span>
                 <input
                   id="email"
                   name="email"
@@ -274,9 +292,9 @@ const Register = () => {
             
             <Motion.div className="input-container" variants={itemVariants}>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                
-                </div>
+                <span className="input-icon-container">
+                  <FaLock className="register-icon" style={iconStyle} />
+                </span>
                 <input
                   id="password"
                   name="password"
@@ -291,12 +309,15 @@ const Register = () => {
                 <label htmlFor="password" className="floating-label pl-10">
                   Mật khẩu
                 </label>
-                <div 
-                  className="password-toggle" 
+                <span 
+                  className="eye-icon-container" 
                   onClick={togglePasswordVisibility}
                 >
-                  {showPassword ? <FaEyeSlash className="h-5 w-5" /> : <FaEye className="h-5 w-5" />}
-                </div>
+                  {showPassword ? 
+                    <FaEye className="eye-icon" style={eyeIconStyle} /> : 
+                    <FaEyeSlash className="eye-icon" style={eyeIconStyle} />
+                  }
+                </span>
               </div>
               {formik.touched.password && formik.errors.password && (
                 <Motion.p 
@@ -311,9 +332,9 @@ const Register = () => {
             
             <Motion.div className="input-container" variants={itemVariants}>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                
-                </div>
+                <span className="input-icon-container">
+                  <FaLock className="register-icon" style={iconStyle} />
+                </span>
                 <input
                   id="confirmPassword"
                   name="confirmPassword"
@@ -328,12 +349,15 @@ const Register = () => {
                 <label htmlFor="confirmPassword" className="floating-label pl-10">
                   Xác nhận mật khẩu
                 </label>
-                <div 
-                  className="password-toggle" 
+                <span 
+                  className="eye-icon-container" 
                   onClick={toggleConfirmPasswordVisibility}
                 >
-                  {showConfirmPassword ? <FaEyeSlash className="h-5 w-5" /> : <FaEye className="h-5 w-5" />}
-                </div>
+                  {showConfirmPassword ? 
+                    <FaEye className="eye-icon" style={eyeIconStyle} /> : 
+                    <FaEyeSlash className="eye-icon" style={eyeIconStyle} />
+                  }
+                </span>
               </div>
               {formik.touched.confirmPassword && formik.errors.confirmPassword && (
                 <Motion.p 

@@ -1,0 +1,92 @@
+/* Tailwind Reset - To fix color issues */
+
+/* Reset all text-white classes that might affect our components */
+.tradiva-body .text-white,
+.tradiva-body [class*="text-white"],
+.tradiva-body .text-white *,
+.tradiva-body [class*="text-white"] * {
+  color: inherit !important;
+}
+
+.tradiva-sidebar * {
+  color: inherit !important;
+}
+
+.tradiva-sidebar a {
+  color: inherit !important;
+  text-decoration: none !important;
+}
+
+.tradiva-sidebar button {
+  color: inherit !important;
+}
+
+.tradiva-sidebar .nav-link {
+  color: #4b5563 !important;
+}
+
+.tradiva-sidebar .nav-link:hover {
+  color: #111827 !important;
+}
+
+.tradiva-sidebar .nav-link.active {
+  color: #3b82f6 !important;
+  background-color: #eff6ff !important;
+}
+
+.tradiva-sidebar .nav-link.active .nav-icon {
+  color: #3b82f6 !important;
+}
+
+.tradiva-sidebar .logo-icon {
+  color: white !important;
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%) !important;
+}
+
+.tradiva-sidebar .logo-text {
+  color: #3b82f6 !important;
+}
+
+.tradiva-sidebar .nav-text {
+  color: currentColor !important;
+}
+
+.tradiva-sidebar .logout-link {
+  color: #ef4444 !important;
+  background-color: #fee2e2 !important;
+}
+
+.tradiva-sidebar .logout-icon {
+  color: #ef4444 !important;
+}
+
+/* Make sure nothing gets overridden in the sidebar */
+.tradiva-sidebar [class*="text-"],
+.tradiva-sidebar [class*="bg-"] {
+  color: inherit !important;
+}
+
+/* These !important rules override any Tailwind classes */
+.tradiva-text-inherit {
+  color: inherit !important;
+}
+
+.tradiva-text-primary {
+  color: #111827 !important;
+}
+
+.tradiva-text-secondary {
+  color: #4b5563 !important;
+}
+
+.tradiva-text-blue {
+  color: #3b82f6 !important;
+}
+
+.tradiva-text-red {
+  color: #ef4444 !important;
+}
+
+.tradiva-text-white {
+  color: white !important;
+} 

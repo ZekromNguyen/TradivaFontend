@@ -1,3 +1,4 @@
+@import './styles/variables.css';
 @import './styles/globals.css';
 
 :root {
@@ -27,11 +28,17 @@ a:hover {
 @tailwind components;
 @tailwind utilities; */
 
-body {
+/* Base styles */
+html, body {
   margin: 0;
-  min-width: 320px;
-  min-height: 100vh;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  padding: 0;
+  min-height: 100%;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #111827;
 }
 
 h1 {
@@ -56,4 +63,45 @@ button:hover {
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
+}
+
+/* Color protection for important elements */
+.tradiva-sidebar,
+.tradiva-sidebar * {
+  color: inherit !important;
+}
+
+.tradiva-sidebar .nav-link {
+  color: #4b5563 !important;
+}
+
+.tradiva-sidebar .nav-link:hover {
+  color: #111827 !important;
+}
+
+.tradiva-sidebar .nav-link.active {
+  color: #3b82f6 !important;
+}
+
+.tradiva-sidebar .logo-icon {
+  color: white !important;
+}
+
+.tradiva-sidebar .logo-text {
+  color: #3b82f6 !important;
+}
+
+.tradiva-sidebar .logout-link {
+  color: #ef4444 !important;
+}
+
+/* Ensure text-white classes don't override our styles */
+.tradiva-body .text-white,
+.tradiva-body [class*="text-white"] {
+  color: inherit !important;
+}
+
+/* Specific rule for the Dashboard component */
+.tradiva-dashboard .tradiva-sidebar .nav-text {
+  color: currentColor !important;
 }

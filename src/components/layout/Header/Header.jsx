@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion as Motion } from 'framer-motion';
-import { FaGlobeAmericas, FaBell, FaUserCircle, FaSearch, FaCompass, FaUserTie, FaPhoneAlt, FaBars, FaTimes } from 'react-icons/fa';
+import { FaGlobeAmericas, FaUserCircle, FaSearch, FaCompass, FaUserTie, FaPhoneAlt, FaBars, FaTimes } from 'react-icons/fa';
 import './Header.css';
 
 const Header = () => {
@@ -183,16 +183,6 @@ const Header = () => {
                 visibility: 'visible',
                 opacity: 1
               }} />
-            </button>
-            
-            {/* Notifications */}
-            <button className="notification-button">
-              <div className="relative">
-                <FaBell className="text-white" />
-                <span className="notification-badge">
-                  3
-                </span>
-              </div>
             </button>
             
             {/* User Profile */}

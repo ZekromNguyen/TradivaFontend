@@ -1,0 +1,132 @@
+/* Styles cho trang hướng dẫn viên */
+.guide-page-container {
+  font-family: 'Inter', sans-serif;
+  min-height: 100vh;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: var(--color-surface-variant, #f8fafc);
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Reset any potential margin/padding conflicts */
+.guide-page-container * {
+  box-sizing: border-box;
+}
+
+/* Ensure header and nav menus from other components don't interfere */
+.guide-page-container header:not(.dashboard-header):not(.sidebar-header),
+.guide-page-container nav:not(.sidebar-nav) {
+  display: none !important;
+}
+
+/* Fix for body when guide dashboard is active */
+body.guide-dashboard-active {
+  background-color: var(--color-surface-variant, #f8fafc);
+  overflow-x: hidden;
+}
+
+/* Force sidebar visibility */
+.guide-page-container .sidebar {
+  display: flex !important;
+  position: fixed !important;
+  left: 0 !important;
+  top: 0 !important;
+  min-height: 100vh !important;
+  z-index: 1000 !important;
+}
+
+/* Animation cho các card */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.5s ease-out forwards;
+}
+
+/* Hiệu ứng hover cho các card */
+.stat-card {
+  transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Hiệu ứng cho các nút */
+.btn-hover-effect {
+  transition: all 0.3s ease;
+}
+
+.btn-hover-effect:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Hiệu ứng cho các thông báo */
+.notification-item {
+  transition: background-color 0.3s ease;
+}
+
+.notification-item:hover {
+  background-color: rgba(249, 250, 251, 0.8);
+}
+
+/* Hiệu ứng cho các tour sắp tới */
+.tour-item {
+  transition: all 0.3s ease;
+}
+
+.tour-item:hover {
+  background-color: rgba(249, 250, 251, 0.8);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .stats-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .guide-page-container .sidebar {
+    width: 100% !important;
+    height: auto !important;
+    position: relative !important;
+  }
+  
+  .guide-page-container .dashboard-content {
+    margin-left: 0 !important;
+    width: 100% !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .stats-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Print styles */
+@media print {
+  .guide-page-container {
+    background: white;
+  }
+  
+  .guide-page-container .sidebar {
+    display: none !important;
+  }
+  
+  .guide-page-container .dashboard-content {
+    margin-left: 0 !important;
+    width: 100% !important;
+  }
+}

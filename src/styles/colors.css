@@ -1,0 +1,66 @@
+/* Global Color Variables */
+:root {
+  /* Primary Colors */
+  --color-primary: #3b82f6;
+  --color-primary-hover: #2563eb;
+  --color-primary-light: #eff6ff;
+  --color-primary-dark: #1d4ed8;
+  
+  /* Text Colors */
+  --color-text-primary: #111827;
+  --color-text-secondary: #4b5563;
+  --color-text-tertiary: #6b7280;
+  --color-text-placeholder: #9ca3af;
+  
+  /* Surface Colors */
+  --color-surface: #ffffff;
+  --color-surface-variant: #f9fafb;
+  --color-surface-hover: #f3f4f6;
+  
+  /* Border Colors */
+  --color-border: #e5e7eb;
+  --color-border-hover: #d1d5db;
+  
+  /* Status Colors */
+  --color-success: #10b981;
+  --color-success-light: #d1fae5;
+  --color-warning: #f59e0b;
+  --color-warning-light: #fef3c7;
+  --color-error: #ef4444;
+  --color-error-light: #fee2e2;
+  --color-info: #3b82f6;
+  --color-info-light: #dbeafe;
+}
+
+/* Force specific colors in Tailwind environments */
+.tradiva-body * {
+  color: var(--color-text-primary);
+}
+
+.tradiva-text-primary {
+  color: var(--color-text-primary) !important;
+}
+
+.tradiva-text-secondary {
+  color: var(--color-text-secondary) !important;
+}
+
+.tradiva-text-tertiary {
+  color: var(--color-text-tertiary) !important;
+}
+
+.tradiva-bg-surface {
+  background-color: var(--color-surface) !important;
+}
+
+.tradiva-primary {
+  color: var(--color-primary) !important;
+}
+
+.tradiva-danger {
+  color: var(--color-error) !important;
+}
+
+.tradiva-white {
+  color: white !important;
+} 

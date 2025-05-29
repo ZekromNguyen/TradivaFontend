@@ -28,6 +28,143 @@
   animation: checkmark 0.2s ease-in-out;
 }
 
+/* Direct styling for input container and input icon */
+.input-icon-container {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  position: absolute !important;
+  left: 12px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  width: 20px !important;
+  height: 20px !important;
+  pointer-events: none !important;
+  z-index: 5 !important;
+}
+
+/* Fix for input icons (FaUser, FaLock) to ensure they're visible */
+.input-icon, 
+.login-icon {
+  color: #9ca3af !important; 
+  fill: #9ca3af !important;
+  stroke: none !important;
+  width: 16px !important;
+  height: 16px !important;
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Fix for password eye icons */
+.login-icon.hover\:text-gray-600:hover {
+  color: #4b5563 !important;
+  fill: #4b5563 !important;
+}
+
+/* Force icons to be visible in all browsers */
+.input-icon-container svg,
+.login-icon svg {
+  color: #9ca3af !important;
+  fill: #9ca3af !important;
+  width: 16px !important;
+  height: 16px !important;
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Fix for the eye icons in password fields */
+.absolute.inset-y-0.right-0.pr-3.flex.items-center.cursor-pointer {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  z-index: 5 !important;
+}
+
+.absolute.inset-y-0.right-0.pr-3.flex.items-center.cursor-pointer svg {
+  color: #9ca3af !important;
+  fill: #9ca3af !important;
+  width: 16px !important;
+  height: 16px !important;
+  display: block !important;
+}
+
+/* Fix for password visibility toggle icons */
+.absolute.inset-y-0.right-0.pr-3.flex.items-center.cursor-pointer .login-icon {
+  color: #9ca3af !important;
+  fill: #9ca3af !important;
+  width: 18px !important;
+  height: 18px !important;
+}
+
+/* Add increased specificity for input fields with icons */
+input.pl-10 {
+  padding-left: 2.5rem !important;
+}
+
+/* Fix for Safari browser icon visibility */
+@media not all and (min-resolution:.001dpcm) { 
+  @supports (-webkit-appearance:none) {
+    .input-icon-container svg, 
+    .login-icon,
+    .login-icon svg {
+      opacity: 1 !important;
+      color: #9ca3af !important;
+      fill: #9ca3af !important;
+      stroke: none !important;
+      filter: none !important;
+      -webkit-filter: none !important;
+    }
+  }
+}
+
+/* Toast notification styles - Đảm bảo thông báo hiển thị dưới header */
+.Toastify__toast-container {
+  z-index: 9999 !important; /* Z-index cao hơn header (50) */
+  position: fixed !important;
+  top: 80px !important; /* Adjusted to clear the header (was 20px) */
+  right: 20px !important;
+}
+
+.Toastify__toast {
+  border-radius: 12px !important;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
+  backdrop-filter: blur(10px) !important;
+  font-weight: 500 !important;
+  font-size: 14px !important;
+  padding: 16px 20px !important;
+  margin-bottom: 10px !important;
+}
+
+.Toastify__toast--success {
+  background: linear-gradient(135deg, #10B981, #059669) !important;
+  color: white !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+.Toastify__toast--error {
+  background: linear-gradient(135deg, #EF4444, #DC2626) !important;
+  color: white !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+.Toastify__progress-bar {
+  background: rgba(255, 255, 255, 0.8) !important;
+  height: 3px !important;
+}
+
+.Toastify__close-button {
+  color: rgba(255, 255, 255, 0.8) !important;
+  font-size: 18px !important;
+}
+
+.Toastify__close-button:hover {
+  color: white !important;
+}
+
 @keyframes slideInLeft {
   from {
     opacity: 0;
@@ -51,24 +188,7 @@
   }
 }
 
-/* Đảm bảo biểu tượng hiển thị đúng */
-svg {
-  display: inline-block !important;
-  opacity: 1 !important;
-  visibility: visible !important;
-}
-
-.react-icons {
-  display: inline-block !important;
-  opacity: 1 !important;
-  visibility: visible !important;
-}
-
-/* Đảm bảo các màu Tailwind được áp dụng đúng */
-.text-gray-400 {
-  color: #9ca3af !important;
-}
-
+/* Tailwind color overrides */
 .text-primary {
   color: #4F46E5 !important;
 }
@@ -77,7 +197,7 @@ svg {
   color: #2563eb !important;
 }
 
-/* Hiệu ứng cho các trường input */
+/* Input field effects */
 .field-valid {
   border-color: #10B981;
   animation: validPulse 0.5s ease-in-out;
@@ -95,7 +215,7 @@ svg {
   }
 }
 
-/* Hiệu ứng cho thông báo lỗi */
+/* Error message effects */
 .error-message {
   color: #EF4444;
   font-size: 0.75rem;
@@ -131,7 +251,7 @@ svg {
   }
 }
 
-/* Hiệu ứng hover cho các nút mạng xã hội */
+/* Social login button hover effects */
 .social-login-btn {
   transition: all 0.3s ease;
 }
