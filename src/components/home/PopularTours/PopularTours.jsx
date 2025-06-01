@@ -1,47 +1,50 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaStar, FaMapMarkerAlt } from 'react-icons/fa';
 import './PopularTours.css';
-
+import { getTours } from '../../../api/tourApi'; // Adjust the import path as necessary
 
 const PopularTours = () => {
-  const tours = [
-    {
-      id: 1,
-      title: "Vịnh Hạ Long",
-      location: "Quảng Ninh",
-      image: "/images/halong.jpg",
-      rating: 4.8,
-      price: "2,500,000",
-      currency: "VND"
-    },
-    {
-      id: 2,
-      title: "Phố cổ Hội An",
-      location: "Quảng Nam",
-      image: "/images/hoian.jpg",
-      rating: 4.9,
-      price: "1,800,000",
-      currency: "VND"
-    },
-    {
-      id: 3,
-      title: "Đà Lạt",
-      location: "Lâm Đồng",
-      image: "/images/dalat.jpg",
-      rating: 4.7,
-      price: "2,200,000",
-      currency: "VND"
-    },
-    {
-      id: 4,
-      title: "Phú Quốc",
-      location: "Kiên Giang",
-      image: "/images/phuquoc.jpg",
-      rating: 4.6,
-      price: "3,500,000",
-      currency: "VND"
-    }
-  ];
+  const [tours, setTours] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchTours = async () => {
+      try {
+        setIsLoading(true);
+        const response = await getTours(); // Fetch top 4 tours
+        console.log("Fetched tours:", response);
+        const mappedTours = response.items.map(tour => ({
+          id: tour.id,
+          title: tour.title,
+          location: 'Unknown', // API doesn't provide location
+          image: tour.images.length > 0 ? tour.images[0].filePath : '/images/fallback.jpg', // Use first image or fallback
+          rating: tour.rating ?? 0, // Fallback to 0 if null
+          price: tour.pricePerPerson.toLocaleString('vi-VN'), // Format price with commas
+          currency: 'VND', // Assume VND as currency
+        }));
+        setTours(mappedTours);
+      } catch (error) {
+        console.error("Error fetching tours:", error);
+        setError("Failed to load tours. Please try again later.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchTours();
+  }, []);
+
+  if (isLoading) {
+    return <div className="text-center py-16">Loading...</div>;
+  }
+
+  if (error) {
+    return <div className="text-center py-16 text-red-500">{error}</div>;
+  }
+
+  if (tours.length === 0) {
+    return <div className="text-center py-16">No tours available.</div>;
+  }
 
   return (
     <section className="py-16 bg-white">
@@ -50,7 +53,6 @@ const PopularTours = () => {
         <p className="text-center text-gray-600 mb-12 max-w-2xl mx-auto">
           Khám phá những tour du lịch được yêu thích nhất tại TRADIVA
         </p>
-        
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {tours.map((tour) => (
             <TourCard key={tour.id} tour={tour} />
@@ -62,10 +64,7 @@ const PopularTours = () => {
 };
 
 const TourCard = React.memo(({ tour }) => (
-  <div 
-    key={tour.id} 
-    className="destination-card bg-white rounded-lg overflow-hidden shadow-md"
-  >
+  <div className="destination-card bg-white rounded-lg overflow-hidden shadow-md">
     <div className="img-zoom-container">
       <img 
         src={tour.image} 
@@ -90,7 +89,11 @@ const TourCard = React.memo(({ tour }) => (
         <span className="font-bold text-primary">
           {tour.price} {tour.currency}
         </span>
-        <button className="px-3 py-1 bg-primary text-white rounded-md text-sm hover:bg-primary-dark transition">
+        <button 
+          className="px-3 py-1 bg-primary text-white rounded-md text-sm hover:bg-primary-dark transition"
+          aria-label={`Book tour to ${tour.title}`}
+          onClick={() => window.location.href = `/tour/${tour.id}`} // Navigate to tour detail page
+        >
           Đặt ngay
         </button>
       </div>
