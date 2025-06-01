@@ -49,6 +49,11 @@ const TourDetailPage = () => {
     const { user, isLoggedIn } = useAuth();
 
   const handleBookTour = async () => {
+    if(!isLoggedIn) {
+      alert("Bạn cần đăng nhập để đặt tour.");
+      navigate("/login");
+      return;
+    }
     if (!tour) return;
     setBookingLoading(true);
     try {

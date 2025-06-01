@@ -4,6 +4,7 @@ import MainLayout from '../layouts/MainLayout';
 import ForgotPassword from '../components/auth/ForgotPassword/ForgotPassword'; // Import ForgotPassword directly
 import PaymentPage from '../pages/Payment/PaymentPage';
 import TourDetailPage from '../pages/TourDetailPage/TourDetailPage';
+import ExplorePage from '../pages/ExplorePage/ExplorePage';
 
 // Lazy load components
 const HomePage = lazy(() => import('../pages/HomePage/HomePage'));
@@ -56,6 +57,14 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<Loading />}>
             <TourDetailPage />
+          </Suspense>
+        ),
+      },
+      {
+        path:'/explore',
+        element: (
+          <Suspense fallback={<Loading />}>
+            <ExplorePage />
           </Suspense>
         ),
       }
