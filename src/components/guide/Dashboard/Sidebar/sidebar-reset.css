@@ -125,7 +125,7 @@
 /* Fix for collapsed sidebar */
 .tradiva-sidebar.collapsed .toggle-sidebar-btn {
   position: absolute !important;
-  right: -15px !important; 
+  right: -15px !important;
   top: 20px !important;
   z-index: 100 !important;
   display: flex !important;
@@ -139,23 +139,23 @@
     transform: translateX(-100%) !important;
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
   }
-  
+
   .tradiva-sidebar.mobile-open {
     transform: translateX(0) !important;
   }
-  
+
   .mobile-toggle {
     display: flex !important;
     position: fixed !important;
     z-index: 60 !important;
   }
-  
+
   .mobile-overlay.active {
     display: block !important;
     opacity: 1 !important;
     pointer-events: auto !important;
   }
-  
+
   .tradiva-sidebar .toggle-sidebar-btn {
     display: none !important;
   }
@@ -167,27 +167,27 @@
     background-color: #1f2937 !important;
     border-color: #374151 !important;
   }
-  
+
   .tradiva-sidebar .nav-link {
     color: #9ca3af !important;
   }
-  
+
   .tradiva-sidebar .nav-link:hover {
     color: #f9fafb !important;
     background-color: #374151 !important;
   }
-  
+
   .tradiva-sidebar .nav-link.active {
     background-color: #1e3a8a !important;
     color: #93c5fd !important;
   }
-  
+
   .tradiva-sidebar .logo-text {
     color: #93c5fd !important;
   }
-  
+
   .tradiva-sidebar .toggle-sidebar-btn {
     background-color: #374151 !important;
     color: #d1d5db !important;
   }
-} 
+}

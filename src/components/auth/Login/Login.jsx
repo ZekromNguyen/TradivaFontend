@@ -34,8 +34,8 @@ const Login = ({ onSwitchToRegister }) => {
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const iconStyle = { 
-    color: '#9ca3af', 
+  const iconStyle = {
+    color: '#9ca3af',
     fill: '#9ca3af',
     width: '16px',
     height: '16px',
@@ -79,8 +79,16 @@ const Login = ({ onSwitchToRegister }) => {
       login(userData, result.accessToken, result.refreshToken);
       toast.success('Đăng nhập thành công!');
 
+      // Role-based navigation
+      const role = userData.role;
       setTimeout(() => {
-        navigate('/');
+        if (role === 'Customer') {
+          navigate('/');
+        } else if (role === 'Guide') {
+          navigate('/guide');
+        } else {
+          navigate('/'); // Default route for unrecognized roles
+        }
       }, 1500);
     } catch (error) {
       toast.error(error.message || 'Có lỗi xảy ra. Vui lòng thử lại sau.');
@@ -98,7 +106,7 @@ const Login = ({ onSwitchToRegister }) => {
     visible: {
       opacity: 1,
       transition: {
-        duration: 0.5,
+
         when: 'beforeChildren',
         staggerChildren: 0.1,
       },
@@ -150,9 +158,8 @@ const Login = ({ onSwitchToRegister }) => {
                 <input
                   id="username"
                   type="text"
-                  className={`w-full px-4 py-3 pl-10 border rounded-lg login-input-focus bg-white/80 backdrop-blur-sm ${
-                    errors.username ? 'border-red-500' : 'border-gray-300'
-                  }`}
+                  className={`w-full px-4 py-3 pl-10 border rounded-lg login-input-focus bg-white/80 backdrop-blur-sm ${errors.username ? 'border-red-500' : 'border-gray-300'
+                    }`}
                   placeholder="Nhập tên đăng nhập"
                   {...register('username', { required: 'Tên đăng nhập là bắt buộc' })}
                 />
@@ -175,9 +182,8 @@ const Login = ({ onSwitchToRegister }) => {
                 <input
                   id="password"
                   type={showPassword ? 'text' : 'password'}
-                  className={`w-full px-4 py-3 pl-10 border rounded-lg login-input-focus bg-white/80 backdrop-blur-sm ${
-                    errors.password ? 'border-red-500' : 'border-gray-300'
-                  }`}
+                  className={`w-full px-4 py-3 pl-10 border rounded-lg login-input-focus bg-white/80 backdrop-blur-sm ${errors.password ? 'border-red-500' : 'border-gray-300'
+                    }`}
                   placeholder="••••••••"
                   {...register('password', {
                     required: 'Mật khẩu là bắt buộc',

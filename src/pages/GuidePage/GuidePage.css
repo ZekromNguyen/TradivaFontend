@@ -1,132 +1,106 @@
-/* Styles cho trang hướng dẫn viên */
-.guide-page-container {
-  font-family: 'Inter', sans-serif;
+/* TourRoute.css */
+.tour-route-container {
+  display: flex;
   min-height: 100vh;
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  background-color: var(--color-surface-variant, #f8fafc);
+  background: #f8fafc;
   position: relative;
-  overflow-x: hidden;
 }
 
-/* Reset any potential margin/padding conflicts */
-.guide-page-container * {
-  box-sizing: border-box;
+/* Main content area */
+.main-content {
+  flex: 1;
+  margin-left: 280px;
+  /* Match sidebar width */
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  position: relative;
+  overflow: hidden;
 }
 
-/* Ensure header and nav menus from other components don't interfere */
-.guide-page-container header:not(.dashboard-header):not(.sidebar-header),
-.guide-page-container nav:not(.sidebar-nav) {
-  display: none !important;
+.main-content::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 140px;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+  z-index: 0;
 }
 
-/* Fix for body when guide dashboard is active */
-body.guide-dashboard-active {
-  background-color: var(--color-surface-variant, #f8fafc);
-  overflow-x: hidden;
+.content-wrapper {
+  position: relative;
+  z-index: 1;
+  padding: 2rem;
+  min-height: 100vh;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
-/* Force sidebar visibility */
-.guide-page-container .sidebar {
-  display: flex !important;
-  position: fixed !important;
-  left: 0 !important;
-  top: 0 !important;
-  min-height: 100vh !important;
-  z-index: 1000 !important;
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .content-wrapper {
+    padding: 1.5rem;
+  }
 }
 
-/* Animation cho các card */
+@media (max-width: 768px) {
+  .main-content {
+    margin-left: 0;
+  }
+
+  .content-wrapper {
+    padding: 1rem;
+  }
+
+  /* Hide sidebar background gradient on mobile */
+  .main-content::before {
+    display: none;
+  }
+}
+
+@media (max-width: 576px) {
+  .content-wrapper {
+    padding: 0.75rem;
+  }
+}
+
+/* Animation for smooth transitions */
+.main-content {
+  transition: margin-left 0.3s ease;
+}
+
+/* Custom scrollbar for main content */
+.main-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.main-content::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+.main-content::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+.main-content::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Enhanced container for better content spacing */
+.content-wrapper>* {
+  animation: fadeInUp 0.6s ease-out;
+}
+
 @keyframes fadeInUp {
   from {
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
-  }
-}
-
-.fade-in-up {
-  animation: fadeInUp 0.5s ease-out forwards;
-}
-
-/* Hiệu ứng hover cho các card */
-.stat-card {
-  transition: all 0.3s ease;
-}
-
-.stat-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-}
-
-/* Hiệu ứng cho các nút */
-.btn-hover-effect {
-  transition: all 0.3s ease;
-}
-
-.btn-hover-effect:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-/* Hiệu ứng cho các thông báo */
-.notification-item {
-  transition: background-color 0.3s ease;
-}
-
-.notification-item:hover {
-  background-color: rgba(249, 250, 251, 0.8);
-}
-
-/* Hiệu ứng cho các tour sắp tới */
-.tour-item {
-  transition: all 0.3s ease;
-}
-
-.tour-item:hover {
-  background-color: rgba(249, 250, 251, 0.8);
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .stats-container {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  
-  .guide-page-container .sidebar {
-    width: 100% !important;
-    height: auto !important;
-    position: relative !important;
-  }
-  
-  .guide-page-container .dashboard-content {
-    margin-left: 0 !important;
-    width: 100% !important;
-  }
-}
-
-@media (max-width: 640px) {
-  .stats-container {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* Print styles */
-@media print {
-  .guide-page-container {
-    background: white;
-  }
-  
-  .guide-page-container .sidebar {
-    display: none !important;
-  }
-  
-  .guide-page-container .dashboard-content {
-    margin-left: 0 !important;
-    width: 100% !important;
   }
 }

@@ -1,20 +1,31 @@
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap-icons/font/bootstrap-icons.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
-import MainLayout from '../layouts/MainLayout';
-import ForgotPassword from '../components/auth/ForgotPassword/ForgotPassword'; // Import ForgotPassword directly
-import PaymentPage from '../pages/Payment/PaymentPage';
-import TourDetailPage from '../pages/TourDetailPage/TourDetailPage';
-import ExplorePage from '../pages/ExplorePage/ExplorePage';
 
-// Lazy load components
+// Layout
+import MainLayout from '../layouts/MainLayout';
+
+// Component thường
+import ForgotPassword from '../components/auth/ForgotPassword/ForgotPassword';
+import TourguideDashboard from '../components/guide/Dashboard/Dashboard';
+
+// Lazy load pages
 const HomePage = lazy(() => import('../pages/HomePage/HomePage'));
 const AuthPage = lazy(() => import('../pages/AuthPage/AuthPage'));
 const GuidePage = lazy(() => import('../pages/GuidePage/GuidePage'));
+const PaymentPage = lazy(() => import('../pages/Payment/PaymentPage'));
+const TourAdmin = lazy(() => import('../pages/GuidePage/GuidePage'));
+const TourDetailPage = lazy(() => import('../pages/TourDetailPage/TourDetailPage'));
+const ExplorePage = lazy(() => import('../pages/ExplorePage/ExplorePage'));
+const Tour = lazy(() => import('../pages/GuidePage/tours/Tour'));
 
-// Loading component
-const Loading = () => <div className="flex items-center justify-center h-screen">Đang tải...</div>;
+// Component loading
+const Loading = () => (
+  <div className="flex items-center justify-center h-screen">Đang tải...</div>
+);
 
-// Tạo router với các routes
+// Router cấu hình
 const router = createBrowserRouter([
   {
     path: '/',
@@ -61,16 +72,15 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path:'/explore',
+        path: '/explore',
         element: (
           <Suspense fallback={<Loading />}>
             <ExplorePage />
           </Suspense>
         ),
-      }
+      },
     ],
   },
-  // Guide page - standalone layout without MainLayout with nested routes
   {
     path: '/guide',
     element: (
@@ -81,23 +91,31 @@ const router = createBrowserRouter([
     children: [
       {
         path: '',
-        element: <div className="payment-dashboard-default"></div>,
+        element: (
+          <Suspense fallback={<Loading />}>
+            <TourAdmin />
+          </Suspense>
+        ),
       },
       {
         path: 'payments',
-        element: <div className="payment-management-component"></div>,
+        element: <div className="payment-management-component">Quản lý thanh toán</div>,
       },
       {
         path: 'tours',
-        element: <div className="tour-management-component"></div>,
+        element: (
+          <Suspense fallback={<Loading />}>
+            <Tour />
+          </Suspense>
+        ),
       },
       {
         path: 'support',
-        element: <div className="support-management-component"></div>,
+        element: <div className="support-management-component">Hỗ trợ</div>,
       },
       {
         path: 'violations',
-        element: <div className="violations-management-component"></div>,
+        element: <div className="violations-management-component">Vi phạm</div>,
       },
     ],
   },

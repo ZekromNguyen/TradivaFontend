@@ -56,7 +56,7 @@
 /* Fix for collapsed sidebar toggle */
 .tradiva-body .tradiva-sidebar.collapsed .toggle-sidebar-btn {
   position: absolute !important;
-  right: -15px !important; 
+  right: -15px !important;
   top: 20px !important;
   margin: 0 !important;
   background-color: #f3f4f6 !important;
@@ -148,7 +148,7 @@
 
 /* Fix for sidebar z-index to ensure it's above content */
 .tradiva-body .tradiva-sidebar {
-  z-index: 50 !important; 
+  z-index: 50 !important;
   overflow: visible !important;
 }
 
@@ -156,4 +156,4 @@
 .tradiva-body .tradiva-sidebar .nav-icon {
   visibility: visible !important;
   opacity: 1 !important;
-} 
+}

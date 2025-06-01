@@ -1,5 +1,6 @@
-const API_BASE = "https://tradivabe.felixtien.dev/api/Tour";
+import axios from "axios";
 
+const API_BASE = "https://tradivabe.felixtien.dev/api/Tour";
 export const getTours = async ({
   sortBy = "Date",
   isDescending = true,
@@ -18,7 +19,6 @@ export const getTours = async ({
   }
 };
 
-
 export const fetchTours = async ({
   sortBy = "Date",
   isDescending = false,
@@ -31,8 +31,8 @@ export const fetchTours = async ({
 } = {}) => {
   let url = `${API_BASE}/GetTours?SortBy=${sortBy}&IsDescending=${isDescending}&PageNumber=${pageNumber}&PageSize=${pageSize}`;
   if (search) url += `&Search=${encodeURIComponent(search)}`;
-  if (minPrice !== "" && minPrice !== 0) url += `&MinPrice=${minPrice}`;
-  if (maxPrice !== "" && maxPrice !== 10000000) url += `&MaxPrice=${maxPrice}`;
+  if (minPrice) url += `&MinPrice=${minPrice}`;
+  if (maxPrice !== 10000000) url += `&MaxPrice=${maxPrice}`;
   if (rating) url += `&MinRating=${rating}`;
 
   try {
@@ -41,6 +41,36 @@ export const fetchTours = async ({
     const data = await res.json();
     return data;
   } catch (err) {
+    console.error("Lỗi fetchTours:", err);
     throw err;
+  }
+};
+
+export const createTourApi = async (tourData) => {
+  try {
+    // GỬI tới endpoint đúng (giả sử đúng là POST /api/Tour)
+    const response = await axios.post(`${API_BASE}`, tourData);
+    return response.data;
+  } catch (e) {
+    console.error("createTourApi Error:", e);
+    throw e.response?.data || e.message;
+  }
+};
+
+export const getTourGuide = async () => {
+  try {
+    const listResponse = await axios.get(`${API_BASE}/GetTours`);
+    const tours = listResponse.data?.items || [];
+
+    const detailedTours = await Promise.all(
+      tours.map(async (tour) => {
+        const detailResponse = await axios.get(`${API_BASE}/${tour.id}`);
+        return detailResponse.data;
+      })
+    );
+
+    return detailedTours;
+  } catch (e) {
+    throw e.response?.data || e.message;
   }
 };
