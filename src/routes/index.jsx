@@ -93,7 +93,7 @@ const router = createBrowserRouter([
         path: '',
         element: (
           <Suspense fallback={<Loading />}>
-            <TourAdmin />
+            <TourguideDashboard />
           </Suspense>
         ),
       },
