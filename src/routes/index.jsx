@@ -2,6 +2,8 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
 import MainLayout from '../layouts/MainLayout';
 import ForgotPassword from '../components/auth/ForgotPassword/ForgotPassword'; // Import ForgotPassword directly
+import PaymentPage from '../pages/Payment/PaymentPage';
+import TourDetailPage from '../pages/TourDetailPage/TourDetailPage';
 
 // Lazy load components
 const HomePage = lazy(() => import('../pages/HomePage/HomePage'));
@@ -49,6 +51,14 @@ const router = createBrowserRouter([
           </Suspense>
         ),
       },
+      {
+        path: '/tour/:id',
+        element: (
+          <Suspense fallback={<Loading />}>
+            <TourDetailPage />
+          </Suspense>
+        ),
+      }
     ],
   },
   // Guide page - standalone layout without MainLayout with nested routes

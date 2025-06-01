@@ -1,0 +1,17 @@
+.bg-primary {
+  background-color: #1e88e5;
+}
+.bg-primary-dark {
+  background-color: #1565c0;
+}
+.text-primary {
+  color: #1e88e5;
+}
+input:focus {
+  outline: none;
+  border-color: #1e88e5;
+  box-shadow: 0 0 0 1px #1e88e5;
+}
+button:focus {
+  outline: none;
+}
