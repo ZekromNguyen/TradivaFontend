@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { FaStar, FaMapMarkerAlt } from 'react-icons/fa';
 import './PopularTours.css';
-import { getTours } from '../../../api/tourApi'; // Adjust the import path as necessary
+import { getTours } from '../../../api/tourAPI'; // Fixed case sensitivity in import path
 
 const PopularTours = () => {
   const [tours, setTours] = useState([]);
