@@ -1,6 +1,7 @@
 import axios from "axios";
 
 const API_BASE = "https://tradivabe.felixtien.dev/api/Tour";
+
 export const getTours = async ({
   sortBy = "Date",
   isDescending = true,
@@ -48,7 +49,6 @@ export const fetchTours = async ({
 
 export const createTourApi = async (tourData) => {
   try {
-    // GỬI tới endpoint đúng (giả sử đúng là POST /api/Tour)
     const response = await axios.post(`${API_BASE}`, tourData);
     return response.data;
   } catch (e) {
