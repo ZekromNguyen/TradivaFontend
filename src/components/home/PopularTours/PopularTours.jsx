@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { FaStar, FaMapMarkerAlt } from 'react-icons/fa';
 import './PopularTours.css';
-import { getTours } from '../../../api/tourAPI'; // Fixed case sensitivity in import path
+import { getTours } from '../../../api/tourApi'; // Fixed case sensitivity in import path
 
 const PopularTours = () => {
   const [tours, setTours] = useState([]);
@@ -66,9 +66,9 @@ const PopularTours = () => {
 const TourCard = React.memo(({ tour }) => (
   <div className="destination-card bg-white rounded-lg overflow-hidden shadow-md">
     <div className="img-zoom-container">
-      <img 
-        src={tour.image} 
-        alt={tour.title} 
+      <img
+        src={tour.image}
+        alt={tour.title}
         className="w-full h-48 object-cover img-zoom"
         loading="lazy"
       />
@@ -89,7 +89,7 @@ const TourCard = React.memo(({ tour }) => (
         <span className="font-bold text-primary">
           {tour.price} {tour.currency}
         </span>
-        <button 
+        <button
           className="px-3 py-1 bg-primary text-white rounded-md text-sm hover:bg-primary-dark transition"
           aria-label={`Book tour to ${tour.title}`}
           onClick={() => window.location.href = `/tour/${tour.id}`} // Navigate to tour detail page
