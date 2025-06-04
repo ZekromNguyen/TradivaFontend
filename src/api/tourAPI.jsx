@@ -1,6 +1,7 @@
 import axios from "axios";
 
 const API_BASE = "https://tradivabe.felixtien.dev/api/Tour";
+const API_FILE = "https://tradivabe.felixtien.dev/api/Files";
 
 export const getTours = async ({
   sortBy = "Date",
@@ -72,5 +73,37 @@ export const getTourGuide = async () => {
     return detailedTours;
   } catch (e) {
     throw e.response?.data || e.message;
+  }
+};
+
+export const uploadFile = async ({
+  tourId,
+  guideProfileId,
+  reportId,
+  fileName,
+  fileType,
+  url,
+  file,
+}) => {
+  try {
+    const formData = new FormData();
+    formData.append('UserId', '');
+    formData.append('TourId', tourId);
+    formData.append('GuideProfileId', guideProfileId || '');
+    formData.append('ReportId', reportId || '');
+    formData.append('FileName', fileName);
+    formData.append('FileType', fileType);
+    formData.append('URL', url);
+    formData.append('File', file); // file là đối tượng File (từ input type="file")
+
+    const response = await axios.post(`${API_FILE}/upload`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    console.log("File uploaded successfully:", formData);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || error.message;
   }
 };

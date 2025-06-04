@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { FaStar, FaSearch } from "react-icons/fa";
-import { fetchTours } from "../../api/tourApi"; // Adjust the import path as necessary
+import { fetchTours } from "../../api/tourAPI"; // Adjust the import path as necessary
 import "./ExplorePage.css"; // Assuming you have a CSS file for styles
 // import "./ExplorePage.css";
 
@@ -114,6 +114,7 @@ useEffect(() => {
         backgroundImage: `linear-gradient(rgba(30, 136, 229, 0.18), rgba(255,255,255,0.96)), url('${BACKGROUND_IMAGE}')`,
         backgroundSize: "cover",
         backgroundPosition: "center",
+        paddingTop: "20vh"
       }}
     >
       <div className="container mx-auto px-4 max-w-7xl relative z-10">
