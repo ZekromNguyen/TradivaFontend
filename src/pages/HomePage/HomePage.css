@@ -1,6 +1,8 @@
 /* HomePage animations and styles */
 .home-page {
   overflow-x: hidden;
+  margin-top: 0;
+  padding-top: 0;
 }
 
 /* Hero section styling */
@@ -13,12 +15,23 @@
 /* Gradient overlay for hero images */
 .hero-overlay {
   background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.7));
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
 }
 
 /* Đảm bảo hero section chiếm toàn bộ màn hình và không bị đẩy xuống */
 .home-page section:first-child {
   margin-top: 0;
   padding-top: 0;
+}
+
+/* Make sure the header shows correctly */
+.home-page header {
+  z-index: 1000;
 }
 
 /* Smooth scrolling for the whole page */

@@ -48,7 +48,6 @@ const AuthPage = ({ initialMode }) => {
       style={backgroundStyle}
       key={isLogin ? 'login' : 'register'}
     >
-      <div className="overlay"></div>
       <div className="form-wrapper">
         {isLogin ? (
           <Login key="login" onSwitchToRegister={toggleAuthMode} />
