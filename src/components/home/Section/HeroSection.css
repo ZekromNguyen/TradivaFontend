@@ -5,6 +5,8 @@
   align-items: center;
   position: relative;
   overflow: hidden;
+  margin-top: 0;
+  padding-top: 0;
 }
 
 .hero-overlay {
@@ -384,4 +386,9 @@
 
 .img-zoom {
   will-change: transform;
+}
+
+/* Make sure the content starts below the header */
+.hero-section .container {
+  padding-top: calc(var(--header-height, 80px) + 1rem);
 }
