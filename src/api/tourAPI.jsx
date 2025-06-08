@@ -127,3 +127,20 @@ export const uploadFile = async ({
     throw error.response?.data || error.message;
   }
 };
+
+
+export const getTourById = async (tourId) => {
+  try {
+    const tourResponse = await axios.get(`${API_BASE}/${tourId}`);
+    const tourData = tourResponse.data;
+
+    // Fetch locations if needed
+    const locations = await getTourLocations(tourId);
+    tourData.tourLocations = locations;
+
+    return tourData;
+  } catch (error) {
+    console.error(`Failed to fetch tour with ID ${tourId}:`, error);
+    throw error.response?.data || error.message;
+  }
+};
