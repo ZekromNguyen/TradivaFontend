@@ -2,6 +2,7 @@ import axios from "axios";
 
 const API_BASE = "https://tradivabe.felixtien.dev/api/Tour";
 const API_FILE = "https://tradivabe.felixtien.dev/api/Files";
+const API_DASHBOARD = "https://tradivabe.felixtien.dev/api/Dashboard";
 
 export const getTours = async ({
   sortBy = "Date",
@@ -45,6 +46,27 @@ export const fetchTours = async ({
   } catch (err) {
     console.error("Lỗi fetchTours:", err);
     throw err;
+  }
+};
+
+/**
+ * Fetches popular tours from the Dashboard API
+ * @param {number} top - Number of top tours to fetch (default: 10)
+ * @returns {Promise<Array>} Array of popular tour objects
+ */
+export const getPopularTours = async (top = 10) => {
+  const url = `${API_DASHBOARD}/popular-tours?top=${top}`;
+
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch popular tours: ${response.statusText}`);
+    }
+    const data = await response.json();
+    return data || [];
+  } catch (error) {
+    console.error("Error fetching popular tours:", error);
+    return [];
   }
 };
 

@@ -23,6 +23,23 @@ const TourGallery = ({ tour }) => {
     setAllImages(images);
   }, [tour]);
 
+  // Add event listener for escape key
+  useEffect(() => {
+    const handleEscKey = (e) => {
+      if (e.key === 'Escape' && isModalOpen) {
+        closeModal();
+      }
+    };
+
+    if (isModalOpen) {
+      document.addEventListener('keydown', handleEscKey);
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEscKey);
+    };
+  }, [isModalOpen]);
+
   const openModal = (index) => {
     setModalStartIndex(index);
     setIsModalOpen(true);
@@ -94,23 +111,30 @@ const TourGallery = ({ tour }) => {
 
       {/* Full screen modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black flex items-center justify-center">
+        <div className="fixed inset-0 z-[9999] bg-black/95 flex items-center justify-center">
           {/* Close button */}
           <button 
             onClick={closeModal}
-            className="absolute top-6 right-6 z-50 bg-white/20 hover:bg-white/40 text-white rounded-full p-2 backdrop-blur-sm transition-colors"
+            className="absolute top-4 right-4 z-[10000] bg-white/80 hover:bg-white text-gray-800 w-12 h-12 rounded-full flex items-center justify-center shadow-lg backdrop-blur-sm transition-colors"
             aria-label="Close gallery"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
+          
+          {/* Background overlay for click-to-close */}
+          <div 
+            className="absolute inset-0 z-[9998]" 
+            onClick={closeModal}
+          ></div>
 
           {/* Carousel in modal */}
-          <div className="w-full h-full p-4 md:p-8">
+          <div className="w-full h-full p-4 md:p-8 z-[9999] relative">
             <ImageCarousel 
               images={allImages} 
               autoPlayInterval={0} // Disable autoplay in modal
+              initialIndex={modalStartIndex}
             />
           </div>
         </div>

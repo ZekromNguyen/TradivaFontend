@@ -1,12 +1,17 @@
 import React, { useState, useEffect, useCallback } from 'react';
 
-const ImageCarousel = ({ images, autoPlayInterval = 5000 }) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
+const ImageCarousel = ({ images, autoPlayInterval = 5000, initialIndex = 0 }) => {
+  const [currentIndex, setCurrentIndex] = useState(initialIndex);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [touchStart, setTouchStart] = useState(0);
   const [touchEnd, setTouchEnd] = useState(0);
   const [loadedImages, setLoadedImages] = useState([]);
   const [isError, setIsError] = useState({});
+
+  // Set initial index when it changes
+  useEffect(() => {
+    setCurrentIndex(initialIndex);
+  }, [initialIndex]);
 
   // Handle image loading
   useEffect(() => {

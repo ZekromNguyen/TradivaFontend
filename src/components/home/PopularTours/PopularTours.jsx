@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { FaStar, FaMapMarkerAlt } from 'react-icons/fa';
 import './PopularTours.css';
-import { getTours } from '../../../api/tourApi'; // Fixed case sensitivity in import path
+import { getPopularTours } from '../../../api/tourApi';
 
 const PopularTours = () => {
   const [tours, setTours] = useState([]);
@@ -12,21 +12,44 @@ const PopularTours = () => {
     const fetchTours = async () => {
       try {
         setIsLoading(true);
-        const response = await getTours(); // Fetch top 4 tours
-        console.log("Fetched tours:", response);
-        const mappedTours = response.items.map(tour => ({
-          id: tour.id,
-          title: tour.title,
-          location: 'Unknown', // API doesn't provide location
-          image: tour.images.length > 0 ? tour.images[0].filePath : '/images/fallback.jpg', // Use first image or fallback
-          rating: tour.rating ?? 0, // Fallback to 0 if null
-          price: tour.pricePerPerson.toLocaleString('vi-VN'), // Format price with commas
-          currency: 'VND', // Assume VND as currency
-        }));
-        setTours(mappedTours);
+        const popularToursData = await getPopularTours(8); // Fetch top 4 popular tours
+        console.log("Fetched popular tours:", popularToursData);
+        
+        // Fetch detailed information for each popular tour
+        const detailedTours = await Promise.all(
+          popularToursData.map(async (tour) => {
+            try {
+              const response = await fetch(`https://tradivabe.felixtien.dev/api/Tour/${tour.tourId}`);
+              if (!response.ok) throw new Error(`Failed to fetch tour ${tour.tourId}`);
+              const tourDetail = await response.json();
+              return {
+                id: tourDetail.id,
+                title: tourDetail.title,
+                location: tourDetail.tourLocations?.[0]?.location?.city || 'Vietnam',
+                image: tourDetail.files && tourDetail.files.length > 0 
+                  ? tourDetail.files[0].filePath 
+                  : '/images/fallback.jpg',
+                rating: tourDetail.ratings && tourDetail.ratings.length > 0
+                  ? tourDetail.ratings.reduce((sum, r) => sum + r.ratingStar, 0) / tourDetail.ratings.length
+                  : 0,
+                price: tourDetail.pricePerPerson?.toLocaleString('vi-VN') || '0',
+                currency: 'VND',
+                popularity: {
+                  matchCount: tour.matchCount,
+                  totalGuests: tour.totalGuests
+                }
+              };
+            } catch (err) {
+              console.error(`Error fetching details for tour ${tour.tourId}:`, err);
+              return null;
+            }
+          })
+        );
+        
+        setTours(detailedTours.filter(tour => tour !== null));
       } catch (error) {
-        console.error("Error fetching tours:", error);
-        setError("Failed to load tours. Please try again later.");
+        console.error("Error fetching popular tours:", error);
+        setError("Failed to load popular tours. Please try again later.");
       } finally {
         setIsLoading(false);
       }
@@ -78,7 +101,7 @@ const TourCard = React.memo(({ tour }) => (
         <h3 className="font-semibold text-lg">{tour.title}</h3>
         <div className="flex items-center">
           <FaStar className="text-yellow-400 mr-1" />
-          <span className="text-sm font-medium">{tour.rating}</span>
+          <span className="text-sm font-medium">{tour.rating.toFixed(1)}</span>
         </div>
       </div>
       <div className="flex items-center text-gray-500 text-sm mb-3">
@@ -92,11 +115,18 @@ const TourCard = React.memo(({ tour }) => (
         <button
           className="px-3 py-1 bg-primary text-white rounded-md text-sm hover:bg-primary-dark transition"
           aria-label={`Book tour to ${tour.title}`}
-          onClick={() => window.location.href = `/tour/${tour.id}`} // Navigate to tour detail page
+          onClick={() => window.location.href = `/tour/${tour.id}`}
         >
           Đặt ngay
         </button>
       </div>
+      {tour.popularity && (
+        <div className="mt-2 text-xs text-gray-500">
+          <span className="bg-blue-50 text-blue-700 px-2 py-1 rounded-full">
+            {tour.popularity.totalGuests} khách đã đặt
+          </span>
+        </div>
+      )}
     </div>
   </div>
 ));
