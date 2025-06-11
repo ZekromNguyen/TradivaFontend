@@ -149,3 +149,25 @@ export const uploadFile = async ({
     throw error.response?.data || error.message;
   }
 };
+
+// Get tour details by ID
+export const getTourDetail = async (id) => {
+  try {
+    const response = await axios.get(`${API_BASE}/${id}`);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Không thể tải chi tiết tour');
+  }
+};
+
+// Update tour by ID
+export const updateTourApi = async (id, formData) => {
+  try {
+    const response = await axios.post(`${API_BASE}/${id}`, formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || "Không thể cập nhật tour");
+  }
+};
