@@ -8,14 +8,25 @@ export const getTours = async ({
   sortBy = "Date",
   isDescending = true,
   pageNumber = 1,
-  pageSize = 10
-} = {}) => {
-  const url = `${API_BASE}/GetTours?SortBy=${sortBy}&IsDescending=${isDescending}&PageNumber=${pageNumber}&PageSize=${pageSize}`;
-
+  pageSize = 100
+} = []) => {
+  const url = `${API_BASE}/GetTours?Pagination.SortBy=${sortBy}&Pagination.IsDescending=${isDescending}&Pagination.PageNumber=${pageNumber}&Pagination.PageSize=${pageSize}`;
   try {
     const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
     const data = await response.json();
-    return data || [];
+    if (Array.isArray(data)) {
+      return data;
+    } else if (data && Array.isArray(data.items)) {
+      return data.items; // Extract the 'items' array
+    } else if (data && Array.isArray(data.tours)) {
+      return data.tours; // Support for 'tours' for backward compatibility
+    } else {
+      console.warn("Unexpected data format from API:", data);
+      return [];
+    }
   } catch (error) {
     console.error("Failed to fetch tours:", error);
     return [];
@@ -40,12 +51,21 @@ export const fetchTours = async ({
 
   try {
     const res = await fetch(url);
-    if (!res.ok) throw new Error("Không thể tải dữ liệu tour");
+    if (!res.ok) {
+      throw new Error(`HTTP error! Status: ${res.status}`);
+    }
     const data = await res.json();
-    return data;
+    if (Array.isArray(data)) {
+      return data;
+    } else if (data && Array.isArray(data.tours)) {
+      return data.tours;
+    } else {
+      console.warn("Unexpected data format from API:", data);
+      return [];
+    }
   } catch (err) {
     console.error("Lỗi fetchTours:", err);
-    throw err;
+    return [];
   }
 };
 
