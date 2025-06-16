@@ -9,6 +9,7 @@ import MainLayout from '../layouts/MainLayout';
 // Component thường
 import ForgotPassword from '../components/auth/ForgotPassword/ForgotPassword';
 import TourguideDashboard from '../components/guide/Dashboard/Dashboard';
+import Chatbot from '../pages/GuidePage/chatbot/Chatbot';
 
 // Lazy load pages
 const HomePage = lazy(() => import('../pages/HomePage/HomePage'));
@@ -120,7 +121,11 @@ const router = createBrowserRouter([
       },
       {
         path: 'support',
-        element: <div className="support-management-component">Hỗ trợ</div>,
+        element: (
+          <Suspense fallback={<Loading />}>
+            <Chatbot />
+          </Suspense>
+        ),
       },
       {
         path: 'violations',

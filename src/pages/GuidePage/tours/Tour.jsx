@@ -119,11 +119,12 @@ export default function ManageTourGuide() {
           tour.images?.[0]?.filePath ||
           "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=300&h=200&fit=crop",
         location: tour.locationCity || "N/A",
-        maxGuests: tour.numberOfGuest || 0,
+        maxGuests: tour.numberOfGuests || 0,
         type: tour.type || "N/A",
         tourLocations: tour.tourLocations || [],
         // Store original data for editing
         originalData: tour,
+
       }));
     },
     []

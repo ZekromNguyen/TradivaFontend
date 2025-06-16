@@ -189,7 +189,7 @@
 }
 
 /* Responsive */
-@media (max-width: 768px) {
+/* @media (max-width: 768px) {
   .sidebar-container {
     width: 260px;
     transform: translateX(-100%);
@@ -199,4 +199,4 @@
   .sidebar-container.mobile-open {
     transform: translateX(0);
   }
-}
+} */
