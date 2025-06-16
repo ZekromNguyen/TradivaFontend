@@ -209,7 +209,6 @@ export const uploadFile = async ({
   }
 };
 
-
 export const deleteTourApi = async (tourId) => {
   try {
     const response = await axios.put(`${API_BASE}/UpdateDeletedTour/${tourId}`);

@@ -19,6 +19,7 @@ const TourAdmin = lazy(() => import('../pages/GuidePage/GuidePage'));
 const TourDetailPage = lazy(() => import('../pages/TourDetailPage/TourDetailPage'));
 const ExplorePage = lazy(() => import('../pages/ExplorePage/ExplorePage'));
 const Tour = lazy(() => import('../pages/GuidePage/tours/Tour'));
+const TourDetailManage = lazy(() => import('../pages/GuidePage/detail/TourDetailManage'));
 
 // Component loading
 const Loading = () => (
@@ -106,6 +107,14 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<Loading />}>
             <Tour />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'detail/:id', // ➕ Đường dẫn mới
+        element: (
+          <Suspense fallback={<Loading />}>
+            <TourDetailManage />
           </Suspense>
         ),
       },

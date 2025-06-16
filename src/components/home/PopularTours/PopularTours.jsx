@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { FaStar, FaMapMarkerAlt } from 'react-icons/fa';
 import './PopularTours.css';
-import { getPopularTours } from '../../../api/tourApi';
+import { getPopularTours } from '../../../api/tourAPI';
 
 const PopularTours = () => {
   const [tours, setTours] = useState([]);
@@ -14,7 +14,7 @@ const PopularTours = () => {
         setIsLoading(true);
         const popularToursData = await getPopularTours(8); // Fetch top 4 popular tours
         console.log("Fetched popular tours:", popularToursData);
-        
+
         // Fetch detailed information for each popular tour
         const detailedTours = await Promise.all(
           popularToursData.map(async (tour) => {
@@ -26,8 +26,8 @@ const PopularTours = () => {
                 id: tourDetail.id,
                 title: tourDetail.title,
                 location: tourDetail.tourLocations?.[0]?.location?.city || 'Vietnam',
-                image: tourDetail.files && tourDetail.files.length > 0 
-                  ? tourDetail.files[0].filePath 
+                image: tourDetail.files && tourDetail.files.length > 0
+                  ? tourDetail.files[0].filePath
                   : '/images/fallback.jpg',
                 rating: tourDetail.ratings && tourDetail.ratings.length > 0
                   ? tourDetail.ratings.reduce((sum, r) => sum + r.ratingStar, 0) / tourDetail.ratings.length
@@ -45,7 +45,7 @@ const PopularTours = () => {
             }
           })
         );
-        
+
         setTours(detailedTours.filter(tour => tour !== null));
       } catch (error) {
         console.error("Error fetching popular tours:", error);

@@ -1,5 +1,5 @@
 import React from "react";
-import { Modal, Button, Form, Spinner } from "react-bootstrap";
+import { Modal, Button, Form, Spinner, Alert } from "react-bootstrap";
 import LocationInput from "./LocationInput";
 
 const TourModal = ({
