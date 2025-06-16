@@ -1,12 +1,18 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { createTourApi, getTours, uploadFile, updateTourApi } from "../../../api/tourAPI";
+import {
+  createTourApi,
+  deleteTourApi,
+  getTourById,
+  getTours,
+  updateTourApi,
+  uploadFile,
+} from "../../../api/tourAPI";
 import axios from "axios";
 import { Container, Spinner, Alert, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import TourFilter from "../../../components/manageTour/TourFilter";
 import TourTable from "../../../components/manageTour/TourTable";
 import TourModal from "../../../components/manageTour/TourModal";
-import LocationInput from "../../../components/manageTour/LocationInput";
 
 export default function ManageTourGuide() {
   const navigate = useNavigate();
@@ -19,8 +25,6 @@ export default function ManageTourGuide() {
     status: "all",
   });
   const [showAddModal, setShowAddModal] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [editingTour, setEditingTour] = useState(null);
   const [newTour, setNewTour] = useState({
     title: "",
     locationCity: "",
@@ -32,13 +36,17 @@ export default function ManageTourGuide() {
     description: "",
     dateStart: "",
     dateEnd: "",
+    existingImage: "", // Thêm field này
     locations: [
       {
         name: "",
         description: "",
         images: [],
+        existingImage: "", // Thêm field này
         latitude: "",
         longitude: "",
+        calendarStart: "", // Thêm field này
+        calendarEnd: "", // Thêm field này
       },
     ],
   });
@@ -54,8 +62,11 @@ export default function ManageTourGuide() {
   const [suggestionIndex, setSuggestionIndex] = useState(0);
   const [imageFile, setImageFile] = useState(null);
   const suggestionTimeoutRef = useRef(null);
+  const [editingTour, setEditingTour] = useState(null);
+  const [showEditModal, setShowEditModal] = useState(false);
 
-  const CLOUDINARY_UPLOAD_URL = `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUD_NAME}/image/upload`;
+  const CLOUDINARY_UPLOAD_URL = `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUD_NAME
+    }/image/upload`;
   const CLOUDINARY_PRESET = import.meta.env.VITE_UPLOAD_PRESET;
 
   // Reset form function
@@ -272,43 +283,57 @@ export default function ManageTourGuide() {
 
   const validateForm = () => {
     const errors = {};
-
-    // Luôn kiểm tra những trường cơ bản (dù là tạo mới hay cập nhật)
     if (!newTour.title) errors.title = "Tên tour là bắt buộc";
     if (!newTour.locationCity) errors.locationCity = "Thành phố là bắt buộc";
+    if (!newTour.duration) errors.duration = "Thời gian là bắt buộc";
+    if (!newTour.pricePerPerson) errors.pricePerPerson = "Giá là bắt buộc";
+    if (!newTour.numberOfPeople)
+      errors.numberOfPeople = "Số người tối đa là bắt buộc";
+    if (!newTour.type) errors.type = "Loại hình tour là bắt buộc";
+    if (!newTour.description) errors.description = "Mô tả tour là bắt buộc";
+    if (!newTour.dateStart) errors.dateStart = "Ngày giờ bắt đầu là bắt buộc";
+    if (!newTour.dateEnd) errors.dateEnd = "Ngày giờ kết thúc là bắt buộc";
 
-    // Kiểm tra thêm các trường khác nếu đang tạo mới tour
-    if (!editingTour) {
-      if (!newTour.duration) errors.duration = "Thời gian là bắt buộc";
-      if (!newTour.pricePerPerson) errors.pricePerPerson = "Giá là bắt buộc";
-      if (!newTour.numberOfPeople) errors.numberOfGuest = "Số người tối đa là bắt buộc";
-      if (!newTour.type) errors.type = "Loại hình tour là bắt buộc";
-      if (!newTour.description) errors.description = "Mô tả tour là bắt buộc";
-      if (!newTour.dateStart) errors.dateStart = "Ngày bắt đầu là bắt buộc";
-      if (!newTour.dateEnd) errors.dateEnd = "Ngày kết thúc là bắt buộc";
+    // Validate date logic
+    if (newTour.dateStart && newTour.dateEnd) {
+      const startDate = new Date(newTour.dateStart);
+      const endDate = new Date(newTour.dateEnd);
+      if (startDate >= endDate) {
+        errors.dateEnd = "Ngày kết thúc phải sau ngày bắt đầu";
+      }
     }
 
-    // Validate danh sách địa điểm
     newTour.locations.forEach((loc, index) => {
       if (!loc.name) {
-        errors[`locationName${index}`] = `Tên địa điểm ${index + 1} là bắt buộc`;
+        errors[`locationName${index}`] = `Tên địa điểm ${index + 1
+          } là bắt buộc`;
       }
 
-      // Nếu đang tạo mới thì hình ảnh là bắt buộc
-      if (!editingTour && loc.images.length === 0) {
-        errors[`locationImages${index}`] = `Hình ảnh địa điểm ${index + 1} là bắt buộc`;
+      // For new tours, require images. For edit mode, check if has existing image OR new images
+      if (!editingTour) {
+        // Add mode
+        if (!loc.images || loc.images.length === 0) {
+          errors[`locationImages${index}`] = `Hình ảnh địa điểm ${index + 1
+            } là bắt buộc`;
+        }
+      } else {
+        // Edit mode
+        // In edit mode, must have either existing image or new images
+        if (!loc.existingImage && (!loc.images || loc.images.length === 0)) {
+          errors[`locationImages${index}`] = `Hình ảnh địa điểm ${index + 1
+            } là bắt buộc`;
+        }
       }
 
-      // Luôn kiểm tra tọa độ
       if (!loc.latitude || !loc.longitude) {
-        errors[`locationCoords${index}`] = `Tọa độ địa điểm ${index + 1} là bắt buộc`;
+        errors[`locationCoords${index}`] = `Tọa độ địa điểm ${index + 1
+          } là bắt buộc`;
       }
     });
 
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   };
-
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (!file) {
@@ -319,7 +344,13 @@ export default function ManageTourGuide() {
     }
 
     const maxSize = 10 * 1024 * 1024;
-    const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/gif", "image/webp"];
+    const allowedTypes = [
+      "image/jpeg",
+      "image/jpg",
+      "image/png",
+      "image/gif",
+      "image/webp",
+    ];
 
     if (!allowedTypes.includes(file.type)) {
       setUploadError("Chỉ chấp nhận file ảnh (JPG, PNG, GIF, WebP)");
@@ -329,7 +360,9 @@ export default function ManageTourGuide() {
     }
 
     if (file.size > maxSize) {
-      setUploadError(`File quá lớn. Kích thước tối đa: ${maxSize / 1024 / 1024}MB`);
+      setUploadError(
+        `File quá lớn. Kích thước tối đa: ${maxSize / 1024 / 1024}MB`
+      );
       setImageFile(null);
       setNewTour((prev) => ({ ...prev, file: null }));
       return;
@@ -388,94 +421,46 @@ export default function ManageTourGuide() {
       setFilteredTours(formattedTours);
       setCurrentPage(1);
       setShowAddModal(false);
-      resetForm();
+      setNewTour({
+        title: "",
+        locationCity: "",
+        duration: "",
+        pricePerPerson: "",
+        numberOfPeople: "",
+        type: "",
+        file: null,
+        description: "",
+        dateStart: "",
+        dateEnd: "",
+        existingImage: "",
+        locations: [
+          {
+            name: "",
+            description: "",
+            images: [],
+            existingImage: "",
+            latitude: "",
+            longitude: "",
+            calendarStart: "",
+            calendarEnd: "",
+          },
+        ],
+      });
+      setImageFile(null);
+      setFormErrors({});
+      setUploadError(null);
       alert("Thêm tour thành công!");
     } catch (error) {
       let errorMessage = "Vui lòng thử lại.";
       if (error.response) {
-        errorMessage = error.response.data?.message || `Lỗi ${error.response.status}: ${error.response.statusText}`;
+        errorMessage =
+          error.response.data?.message ||
+          `Lỗi ${error.response.status}: ${error.response.statusText}`;
       } else if (error.request) {
-        errorMessage = "Không thể kết nối đến server. Vui lòng kiểm tra kết nối mạng.";
+        errorMessage =
+          "Không thể kết nối đến server. Vui lòng kiểm tra kết nối mạng.";
       }
       alert(`Lỗi khi thêm tour: ${errorMessage}`);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleUpdateTour = async () => {
-    if (!validateForm() || !editingTour) {
-      return;
-    }
-
-    setLoading(true);
-    try {
-      const processedLocations = await Promise.all(
-        newTour.locations.map(async (location) => {
-          let imageUrls = [];
-
-          // If new images are provided, upload them
-          if (location.images && location.images.length > 0) {
-            imageUrls = await uploadImagesToCloudinary(location.images);
-          }
-
-          // Use new image if uploaded, otherwise keep existing image
-          const primaryImage = imageUrls[0] || location.existingImage ||
-            "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=300&h=200&fit=crop";
-
-          return {
-            id: location.id || undefined, // Include ID if updating existing location
-            name: location.name,
-            city: newTour.locationCity,
-            description: location.description || "",
-            image: primaryImage,
-            calendarStart: new Date(newTour.dateStart).toISOString(),
-            calendarEnd: new Date(newTour.dateEnd).toISOString(),
-            latitude: parseFloat(location.latitude) || 0,
-            longitude: parseFloat(location.longitude) || 0,
-          };
-        })
-      );
-
-      const formData = new FormData();
-      formData.append("Id", editingTour.id.toString());
-      formData.append("Title", newTour.title);
-      formData.append("Description", newTour.description);
-      formData.append("PricePerPerson", newTour.pricePerPerson.toString());
-      formData.append("NumberOfPeople", newTour.numberOfPeople.toString());
-      formData.append("DateStart", new Date(newTour.dateStart).toISOString());
-      formData.append("DateEnd", new Date(newTour.dateEnd).toISOString());
-
-      // Only append new image if one was selected
-      if (imageFile) {
-        formData.append("file", imageFile);
-      }
-
-      formData.append("Locations", JSON.stringify(processedLocations));
-
-      await updateTourApi(editingTour.id, formData);
-
-      // Refresh tour list
-      const tourList = await getTours();
-      const formattedTours = formatTours(tourList);
-      setTours(formattedTours);
-      setFilteredTours(formattedTours);
-      setCurrentPage(1);
-
-      // Close modal and reset
-      setShowEditModal(false);
-      setEditingTour(null);
-      resetForm();
-
-      alert("Cập nhật tour thành công!");
-    } catch (error) {
-      let errorMessage = "Vui lòng thử lại.";
-      if (error.response) {
-        errorMessage = error.response.data?.message || `Lỗi ${error.response.status}: ${error.response.statusText}`;
-      } else if (error.request) {
-        errorMessage = "Không thể kết nối đến server. Vui lòng kiểm tra kết nối mạng.";
-      }
-      alert(`Lỗi khi cập nhật tour: ${errorMessage}`);
     } finally {
       setLoading(false);
     }
@@ -485,7 +470,7 @@ export default function ManageTourGuide() {
     if (window.confirm("Bạn có chắc chắn muốn xóa tour này?")) {
       setLoading(true);
       try {
-        // await deleteTourApi(id); // Uncomment when API is available
+        await deleteTourApi(id); // Uncomment when API is available
         const tourData = await getTours();
         const formattedTours = formatTours(tourData);
         setTours(formattedTours);
@@ -501,60 +486,209 @@ export default function ManageTourGuide() {
   };
 
   const handleViewTour = (id) => {
-    navigate(`/guide/detail/${id}`);
+    navigate(`/tourguide/manage/detail/${id}`);
   };
 
-  const handleEditTour = (id) => {
-    const tour = tours.find((t) => t.id === id);
-    if (!tour) {
-      alert("Không tìm thấy tour để chỉnh sửa");
+  // 1. Thay thế function formatTourForEdit trong ManageTourGuide.jsx:
+
+  const formatTourForEdit = (tourData) => {
+    // Helper function to convert date to datetime-local format
+    const formatDateForInput = (dateString) => {
+      if (!dateString) return "";
+      const date = new Date(dateString);
+      // Format to YYYY-MM-DDTHH:mm for datetime-local input
+      return date.toISOString().slice(0, 16);
+    };
+
+    return {
+      id: tourData.id,
+      title: tourData.title || "",
+      locationCity:
+        tourData.locationCity ||
+        tourData.tourLocations?.[0]?.location?.city ||
+        "",
+      duration: tourData.duration || "",
+      pricePerPerson: tourData.pricePerPerson?.toString() || "",
+      numberOfPeople:
+        (tourData.numberOfPeople || tourData.numberOfGuests)?.toString() || "",
+      type: tourData.type || "",
+      file: null, // Will be set if user uploads new image
+      description: tourData.description || "",
+      // Convert dates to proper format for datetime-local inputs
+      dateStart: formatDateForInput(tourData.dateStart),
+      dateEnd: formatDateForInput(tourData.dateEnd),
+      // Store existing main image URL - check files array first, then fallback
+      existingImage:
+        tourData.files?.[0]?.url ||
+        tourData.images?.[0]?.filePath ||
+        tourData.image ||
+        "",
+      locations: tourData.tourLocations?.map((tl) => ({
+        id: tl.location?.id || tl.id,
+        name: tl.location?.name || tl.name || "",
+        description: tl.location?.description || tl.description || "",
+        images: [], // Empty for new uploads, will show existing images separately
+        existingImage: tl.location?.image || "", // Store single existing image URL
+        latitude: (tl.location?.latitude || tl.latitude)?.toString() || "",
+        longitude: (tl.location?.longitude || tl.longitude)?.toString() || "",
+        calendarStart: formatDateForInput(
+          tl.location?.dateStart || tl.dateStart
+        ),
+        calendarEnd: formatDateForInput(tl.location?.dateEnd || tl.dateEnd),
+        city: tl.location?.city || tl.city || "",
+        image: tl.location?.image || tl.image || "",
+      })) || [
+          {
+            id: 0,
+            name: "",
+            description: "",
+            images: [],
+            existingImage: "",
+            latitude: "",
+            longitude: "",
+            calendarStart: "",
+            calendarEnd: "",
+            city: "",
+            image: "",
+          },
+        ],
+    };
+  };
+
+  // Cập nhật handleEditTour function
+  const handleEditTour = async (id) => {
+    try {
+      setLoading(true);
+      const tourData = await getTourById(id);
+      const formattedTour = formatTourForEdit(tourData);
+      setEditingTour(formattedTour);
+      setNewTour(formattedTour);
+      setShowEditModal(true);
+    } catch (error) {
+      alert(
+        `Lỗi khi tải thông tin tour: ${error.message || "Vui lòng thử lại."}`
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Hàm xử lý update tour
+  const handleUpdateTour = async () => {
+    if (!validateForm()) {
       return;
     }
 
-    setEditingTour(tour);
+    setLoading(true);
+    try {
+      // Process locations data for API with Cloudinary upload
+      const processedLocations = await Promise.all(
+        newTour.locations.map(async (location) => {
+          let imageUrl = location.existingImage; // Start with existing image
 
-    // Populate form with existing tour data
-    const originalData = tour.originalData || tour;
+          // If new images are uploaded, upload to Cloudinary and use the first one
+          if (location.images && location.images.length > 0) {
+            try {
+              const imageUrls = await uploadImagesToCloudinary(location.images);
+              imageUrl = imageUrls[0]; // Use first uploaded image as primary
+            } catch (error) {
+              console.error(`Lỗi upload ảnh cho địa điểm ${location.name}:`, error);
+              // Keep existing image if upload fails
+              imageUrl = location.existingImage || "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=300&h=200&fit=crop";
+            }
+          }
 
-    setNewTour({
-      title: originalData.title || "",
-      locationCity: originalData.locationCity || tour.location || "",
-      duration: originalData.duration || "",
-      pricePerPerson: originalData.pricePerPerson?.toString() || "",
-      numberOfPeople: originalData.numberOfPeople?.toString() || originalData.numberOfGuest?.toString() || "",
-      type: originalData.type || "",
-      file: null, // Don't pre-populate file
-      description: originalData.description || "",
-      dateStart: formatDateForInput(originalData.dateStart),
-      dateEnd: formatDateForInput(originalData.dateEnd),
-      locations: originalData.tourLocations?.map(loc => ({
-        id: loc.id,
-        name: loc.name || "",
-        description: loc.description || "",
-        images: [], // Don't pre-populate images array
-        existingImage: loc.image, // Store existing image URL
-        latitude: loc.latitude?.toString() || "",
-        longitude: loc.longitude?.toString() || "",
-      })) || [
+          // Fallback to default image if no existing and no new images
+          if (!imageUrl) {
+            imageUrl = "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=300&h=200&fit=crop";
+          }
+
+          return {
+            id: location.id || 0,
+            name: location.name,
+            city: location.city || newTour.locationCity,
+            description: location.description || "",
+            image: imageUrl, // Use uploaded or existing image URL
+            calendarStart: location.calendarStart ?
+              new Date(location.calendarStart).toISOString() :
+              new Date(newTour.dateStart).toISOString(),
+            calendarEnd: location.calendarEnd ?
+              new Date(location.calendarEnd).toISOString() :
+              new Date(newTour.dateEnd).toISOString(),
+            latitude: parseFloat(location.latitude) || 0,
+            longitude: parseFloat(location.longitude) || 0,
+          };
+        })
+      );
+
+      const updateData = {
+        id: editingTour.id,
+        title: newTour.title,
+        description: newTour.description,
+        price: parseFloat(newTour.pricePerPerson),
+        numberOfPeople: parseInt(newTour.numberOfPeople),
+        dateStart: new Date(newTour.dateStart).toISOString(),
+        dateEnd: new Date(newTour.dateEnd).toISOString(),
+        status: "Active",
+        locations: processedLocations,
+      };
+
+      await updateTourApi(updateData);
+
+      // Refresh tour list
+      const tourList = await getTours();
+      const formattedTours = formatTours(tourList);
+      setTours(formattedTours);
+      setFilteredTours(formattedTours);
+      setCurrentPage(1);
+
+      // Reset form
+      setShowEditModal(false);
+      setEditingTour(null);
+      setNewTour({
+        title: "",
+        locationCity: "",
+        duration: "",
+        pricePerPerson: "",
+        numberOfPeople: "",
+        type: "",
+        file: null,
+        description: "",
+        dateStart: "",
+        dateEnd: "",
+        existingImage: "",
+        locations: [
           {
             name: "",
             description: "",
             images: [],
+            existingImage: "",
             latitude: "",
             longitude: "",
+            calendarStart: "",
+            calendarEnd: "",
+            city: "",
+            image: "",
           },
         ],
-    });
+      });
+      setImageFile(null);
+      setFormErrors({});
+      setUploadError(null);
 
-    setShowEditModal(true);
+      alert("Cập nhật tour thành công!");
+    } catch (error) {
+      let errorMessage = "Vui lòng thử lại.";
+      if (error.response) {
+        errorMessage = error.response.data?.message || `Lỗi ${error.response.status}: ${error.response.statusText}`;
+      } else if (error.request) {
+        errorMessage = "Không thể kết nối đến server. Vui lòng kiểm tra kết nối mạng.";
+      }
+      alert(`Lỗi khi cập nhật tour: ${errorMessage}`);
+    } finally {
+      setLoading(false);
+    }
   };
-
-  const handleCloseEditModal = () => {
-    setShowEditModal(false);
-    setEditingTour(null);
-    resetForm();
-  };
-
   return (
     <>
       <link
@@ -565,18 +699,11 @@ export default function ManageTourGuide() {
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
         rel="stylesheet"
       />
-      <Container fluid className="py-4" style={{ backgroundColor: "#f8f9fa", minHeight: "100vh" }}>
-        {/* Add Tour Button */}
-        <div className="d-flex justify-content-end mb-4">
-          <Button
-            variant="primary"
-            onClick={() => setShowAddModal(true)}
-            className="d-flex align-items-center"
-          >
-            <i className="fas fa-plus me-2"></i> Thêm Tour
-          </Button>
-        </div>
-
+      <Container
+        fluid
+        className="py-4"
+        style={{ backgroundColor: "#f8f9fa", minHeight: "100vh" }}
+      >
         {loading && (
           <div className="text-center">
             <Spinner animation="border" />
@@ -584,7 +711,12 @@ export default function ManageTourGuide() {
           </div>
         )}
         {error && <Alert variant="danger">{error}</Alert>}
-
+        <div className="d-flex justify-content-end mb-3">
+          <Button variant="primary" onClick={() => setShowAddModal(true)}>
+            <i className="fas fa-plus me-2"></i>
+            Thêm Tour
+          </Button>
+        </div>
         <TourFilter
           filters={filters}
           setFilters={setFilters}
@@ -605,14 +737,14 @@ export default function ManageTourGuide() {
           handleDeleteTour={handleDeleteTour}
         />
 
-        {/* Add Tour Modal */}
         <TourModal
           show={showAddModal}
           onHide={() => {
             setShowAddModal(false);
-            resetForm();
+            setLocationSuggestions([]);
+            setFormErrors({});
+            setImageFile(null);
           }}
-          title="Thêm Tour Mới"
           newTour={newTour}
           setNewTour={setNewTour}
           formErrors={formErrors}
@@ -626,16 +758,46 @@ export default function ManageTourGuide() {
           suggestionType={suggestionType}
           suggestionIndex={suggestionIndex}
           handleSelectSuggestion={handleSelectSuggestion}
-          handleSubmit={handleAddTour}
+          handleAddTour={handleAddTour}
           loading={loading}
-          submitButtonText="Thêm Tour"
+          isEditMode={false} // Add this
         />
 
-        {/* Edit Tour Modal */}
         <TourModal
           show={showEditModal}
-          onHide={handleCloseEditModal}
-          title="Chỉnh Sửa Tour"
+          onHide={() => {
+            setShowEditModal(false);
+            setEditingTour(null);
+            setLocationSuggestions([]);
+            setFormErrors({});
+            setImageFile(null);
+            // Reset newTour về trạng thái ban đầu
+            setNewTour({
+              title: "",
+              locationCity: "",
+              duration: "",
+              pricePerPerson: "",
+              numberOfPeople: "",
+              type: "",
+              file: null,
+              description: "",
+              dateStart: "",
+              dateEnd: "",
+              existingImage: "",
+              locations: [
+                {
+                  name: "",
+                  description: "",
+                  image: "",
+                  existingImage: "",
+                  latitude: "",
+                  longitude: "",
+                  calendarStart: "",
+                  calendarEnd: "",
+                },
+              ],
+            });
+          }}
           newTour={newTour}
           setNewTour={setNewTour}
           formErrors={formErrors}
@@ -649,10 +811,9 @@ export default function ManageTourGuide() {
           suggestionType={suggestionType}
           suggestionIndex={suggestionIndex}
           handleSelectSuggestion={handleSelectSuggestion}
-          handleSubmit={handleUpdateTour}
+          handleUpdateTour={handleUpdateTour}
           loading={loading}
-          submitButtonText="Cập Nhật Tour"
-          editingTour={editingTour}
+          isEditMode={true} // Add this
         />
       </Container>
     </>
