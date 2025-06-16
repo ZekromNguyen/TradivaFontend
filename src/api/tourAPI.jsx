@@ -43,7 +43,7 @@ export const fetchTours = async ({
   maxPrice = 10000000,
   rating = ""
 } = {}) => {
-  let url = `${API_BASE}/GetTours?SortBy=${sortBy}&IsDescending=${isDescending}&PageNumber=${pageNumber}&PageSize=${pageSize}`;
+  let url = `${API_BASE}/GetTours?Pagination.SortBy=${sortBy}&Pagination.IsDescending=${isDescending}&Pagination.PageNumber=${pageNumber}&Pagination.PageSize=${pageSize}`;
   if (search) url += `&Search=${encodeURIComponent(search)}`;
   if (minPrice) url += `&MinPrice=${minPrice}`;
   if (maxPrice !== 10000000) url += `&MaxPrice=${maxPrice}`;
@@ -52,20 +52,79 @@ export const fetchTours = async ({
   try {
     const res = await fetch(url);
     if (!res.ok) {
-      throw new Error(`HTTP error! Status: ${res.status}`);
+      throw new Error(`HTTP error! Status: ${res.status} - ${res.statusText}`);
     }
+    
     const data = await res.json();
-    if (Array.isArray(data)) {
-      return data;
-    } else if (data && Array.isArray(data.tours)) {
-      return data.tours;
-    } else {
-      console.warn("Unexpected data format from API:", data);
-      return [];
+    
+    // Xử lý response format chính xác
+    if (data && typeof data === 'object' && Array.isArray(data.items)) {
+      // ✅ Format chuẩn với pagination (như JSON bạn cung cấp)
+      const result = {
+        items: data.items,
+        totalPages: data.totalPages || Math.ceil((data.totalItems || 0) / pageSize),
+        totalItems: data.totalItems || 0,
+        pageIndex: data.pageIndex || pageNumber,
+        pageSize: data.pageSize || pageSize,
+        hasNextPage: data.hasNextPage || false,
+        hasPreviousPage: data.hasPreviousPage || false
+      };
+      
+      return result;
+    } 
+    else if (Array.isArray(data)) {
+      // 🔄 Fallback: Nếu API trả về array trực tiếp
+      
+      const result = {
+        items: data,
+        totalPages: 1,
+        totalItems: data.length,
+        pageIndex: 1,
+        pageSize: data.length,
+        hasNextPage: false,
+        hasPreviousPage: false
+      };
+      return result;
+    } 
+    else if (data && typeof data === 'object' && Array.isArray(data.tours)) {
+      // 🔄 Fallback: Nếu API có field 'tours' thay vì 'items'
+      console.log("🔄 [fetchTours] Found data.tours, mapping...");
+      
+      const result = {
+        items: data.tours,
+        totalPages: data.totalPages || 1,
+        totalItems: data.totalItems || data.tours.length,
+        pageIndex: data.pageIndex || pageNumber,
+        pageSize: data.pageSize || pageSize,
+        hasNextPage: data.hasNextPage || false,
+        hasPreviousPage: data.hasPreviousPage || false
+      };
+      
+      return result;
+    } 
+    else {
+      
+      throw new Error(`Unexpected API response format. Expected object with 'items' array or direct array, got: ${typeof data}`);
     }
+    
   } catch (err) {
-    console.error("Lỗi fetchTours:", err);
-    return [];
+    console.error("❌ [fetchTours] Error details:", {
+      message: err.message,
+      url: url,
+      params: {
+        sortBy,
+        isDescending,
+        pageNumber,
+        pageSize,
+        search,
+        minPrice,
+        maxPrice,
+        rating
+      }
+    });
+    
+    // Ném lỗi để component có thể handle
+    throw new Error(`Failed to fetch tours: ${err.message}`);
   }
 };
 
@@ -150,24 +209,36 @@ export const uploadFile = async ({
   }
 };
 
-// Get tour details by ID
-export const getTourDetail = async (id) => {
+export const deleteTourApi = async (tourId) => {
   try {
-    const response = await axios.get(`${API_BASE}/${id}`);
+    const response = await axios.put(`${API_BASE}/UpdateDeletedTour/${tourId}`);
     return response.data;
-  } catch (error) {
-    throw new Error(error.response?.data?.message || 'Không thể tải chi tiết tour');
+  } catch (e) {
+    console.error("deleteTourApi Error:", e);
+    throw e.response?.data || e.message;
   }
 };
 
-// Update tour by ID
-export const updateTourApi = async (id, formData) => {
+export const updateTourApi = async (tourData) => {
   try {
-    const response = await axios.post(`${API_BASE}/${id}`, formData, {
-      headers: { "Content-Type": "multipart/form-data" },
+    const response = await axios.put(`${API_BASE}`, tourData, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
     });
     return response.data;
-  } catch (error) {
-    throw new Error(error.response?.data?.message || "Không thể cập nhật tour");
+  } catch (e) {
+    console.error("updateTourApi Error:", e);
+    throw e.response?.data || e.message;
+  }
+};
+
+export const getTourById = async (id) => {
+  try {
+    const response = await axios.get(`${API_BASE}/${id}`);
+    return response.data;
+  } catch (e) {
+    console.error("getTourById Error:", e);
+    throw e.response?.data || e.message;
   }
 };
