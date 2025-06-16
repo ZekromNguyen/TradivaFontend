@@ -208,3 +208,38 @@ export const uploadFile = async ({
     throw error.response?.data || error.message;
   }
 };
+
+
+export const deleteTourApi = async (tourId) => {
+  try {
+    const response = await axios.put(`${API_BASE}/UpdateDeletedTour/${tourId}`);
+    return response.data;
+  } catch (e) {
+    console.error("deleteTourApi Error:", e);
+    throw e.response?.data || e.message;
+  }
+};
+
+export const updateTourApi = async (tourData) => {
+  try {
+    const response = await axios.put(`${API_BASE}`, tourData, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    return response.data;
+  } catch (e) {
+    console.error("updateTourApi Error:", e);
+    throw e.response?.data || e.message;
+  }
+};
+
+export const getTourById = async (id) => {
+  try {
+    const response = await axios.get(`${API_BASE}/${id}`);
+    return response.data;
+  } catch (e) {
+    console.error("getTourById Error:", e);
+    throw e.response?.data || e.message;
+  }
+};
