@@ -54,9 +54,9 @@ export const fetchTours = async ({
     if (!res.ok) {
       throw new Error(`HTTP error! Status: ${res.status} - ${res.statusText}`);
     }
-    
+
     const data = await res.json();
-    
+
     // Xử lý response format chính xác
     if (data && typeof data === 'object' && Array.isArray(data.items)) {
       // ✅ Format chuẩn với pagination (như JSON bạn cung cấp)
@@ -69,12 +69,12 @@ export const fetchTours = async ({
         hasNextPage: data.hasNextPage || false,
         hasPreviousPage: data.hasPreviousPage || false
       };
-      
+
       return result;
-    } 
+    }
     else if (Array.isArray(data)) {
       // 🔄 Fallback: Nếu API trả về array trực tiếp
-      
+
       const result = {
         items: data,
         totalPages: 1,
@@ -85,11 +85,11 @@ export const fetchTours = async ({
         hasPreviousPage: false
       };
       return result;
-    } 
+    }
     else if (data && typeof data === 'object' && Array.isArray(data.tours)) {
       // 🔄 Fallback: Nếu API có field 'tours' thay vì 'items'
       console.log("🔄 [fetchTours] Found data.tours, mapping...");
-      
+
       const result = {
         items: data.tours,
         totalPages: data.totalPages || 1,
@@ -99,14 +99,14 @@ export const fetchTours = async ({
         hasNextPage: data.hasNextPage || false,
         hasPreviousPage: data.hasPreviousPage || false
       };
-      
+
       return result;
-    } 
+    }
     else {
-      
+
       throw new Error(`Unexpected API response format. Expected object with 'items' array or direct array, got: ${typeof data}`);
     }
-    
+
   } catch (err) {
     console.error("❌ [fetchTours] Error details:", {
       message: err.message,
@@ -122,7 +122,7 @@ export const fetchTours = async ({
         rating
       }
     });
-    
+
     // Ném lỗi để component có thể handle
     throw new Error(`Failed to fetch tours: ${err.message}`);
   }
@@ -240,5 +240,15 @@ export const getTourById = async (id) => {
   } catch (e) {
     console.error("getTourById Error:", e);
     throw e.response?.data || e.message;
+  }
+};
+
+
+export const getTourDetail = async (id) => {
+  try {
+    const response = await axios.get(`${API_BASE}/${id}`);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Không thể tải chi tiết tour');
   }
 };

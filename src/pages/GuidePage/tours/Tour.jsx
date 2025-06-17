@@ -486,7 +486,7 @@ export default function ManageTourGuide() {
   };
 
   const handleViewTour = (id) => {
-    navigate(`/tourguide/manage/detail/${id}`);
+    navigate(`/guide/detail/${id}`);
   };
 
   // 1. Thay thế function formatTourForEdit trong ManageTourGuide.jsx:
