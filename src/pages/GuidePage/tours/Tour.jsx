@@ -405,6 +405,7 @@ export default function ManageTourGuide() {
       const formData = new FormData();
       formData.append("Title", newTour.title);
       formData.append("Description", newTour.description);
+      formData.append("Duration", newTour.duration);
       formData.append("PricePerPerson", newTour.pricePerPerson.toString());
       formData.append("NumberOfPeople", newTour.numberOfPeople.toString());
       formData.append("DateStart", new Date(newTour.dateStart).toISOString());
@@ -624,6 +625,7 @@ export default function ManageTourGuide() {
       const updateData = {
         id: editingTour.id,
         title: newTour.title,
+        duration: newTour.duration,
         description: newTour.description,
         price: parseFloat(newTour.pricePerPerson),
         numberOfPeople: parseInt(newTour.numberOfPeople),

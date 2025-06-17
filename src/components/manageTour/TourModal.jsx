@@ -57,36 +57,7 @@ const TourModal = ({
               </Form.Group>
             </div>
 
-            <div className="col-md-6">
-              <Form.Group>
-                <Form.Label>Thành phố *</Form.Label>
-                <div className="position-relative">
-                  <Form.Control
-                    type="text"
-                    placeholder="Nhập thành phố..."
-                    value={newTour.locationCity}
-                    onChange={(e) => {
-                      setNewTour((prev) => ({
-                        ...prev,
-                        locationCity: e.target.value,
-                      }));
-                      fetchLocationSuggestions(e.target.value, "city");
-                    }}
-                    isInvalid={!!formErrors.locationCity}
-                  />
-                  {suggestionsLoading && suggestionType === "city" && (
-                    <Spinner
-                      animation="border"
-                      size="sm"
-                      className="position-absolute top-50 end-0 translate-middle-y me-2"
-                    />
-                  )}
-                  <Form.Control.Feedback type="invalid">
-                    {formErrors.locationCity}
-                  </Form.Control.Feedback>
-                </div>
-              </Form.Group>
-            </div>
+            
 
             {/* Tour Details */}
             <div className="col-md-4">
