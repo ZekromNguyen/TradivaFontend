@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import "./Tracking.css"; // Custom CSS for styling
+import { fetchTourById, fetchTrackingLogs } from "../../api/tracking";
+import "./Tracking.css";
 
 const TrackingPage = () => {
     const { id: tourId } = useParams();
@@ -8,29 +9,14 @@ const TrackingPage = () => {
     const [trackingLogs, setTrackingLogs] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [customerCoords, setCustomerCoords] = useState({ latitude: null, longitude: null, address: null }); // Include address
+    const [customerCoords, setCustomerCoords] = useState({ latitude: null, longitude: null, address: null });
 
-    // Fetch tour data including locations
     useEffect(() => {
-        const fetchTourData = async () => {
+        const loadTourData = async () => {
             try {
                 setLoading(true);
-                const token = localStorage.getItem("accessToken");
-                const response = await fetch(`https://tradivabe.felixtien.dev/api/Tour/${tourId}`, {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`,
-                        Accept: "*/*",
-                    },
-                });
-
-                if (!response.ok) {
-                    throw new Error("Failed to fetch tour data");
-                }
-
-                const tourData = await response.json();
-                if (tourData && tourData.tourLocations) {
+                const tourData = await fetchTourById(tourId);
+                if (tourData?.tourLocations) {
                     setLocations(tourData.tourLocations.map((tl) => tl.location));
                 } else {
                     setLocations([]);
@@ -42,32 +28,14 @@ const TrackingPage = () => {
             }
         };
 
-        fetchTourData();
+        loadTourData();
     }, [tourId]);
 
-    // Fetch tracking logs with periodic refresh
     useEffect(() => {
-        const fetchTrackingLogs = async () => {
+        const loadTrackingLogs = async () => {
             try {
                 setLoading(true);
-                const token = localStorage.getItem("accessToken");
-                const response = await fetch(
-                    `https://tradivabe.felixtien.dev/api/TrackingLogs/GetTrackingLogs?tourId=${tourId}&PageNumber=1&PageSize=10&SortBy=timestamp&IsDescending=true`,
-                    {
-                        method: "GET",
-                        headers: {
-                            "Content-Type": "application/json",
-                            Authorization: `Bearer ${token}`,
-                            Accept: "*/*",
-                        },
-                    }
-                );
-
-                if (!response.ok) {
-                    throw new Error("Failed to fetch tracking logs");
-                }
-
-                const data = await response.json();
+                const data = await fetchTrackingLogs(tourId);
                 setTrackingLogs(data.items || []);
             } catch (err) {
                 setError(err.message);
@@ -76,80 +44,28 @@ const TrackingPage = () => {
             }
         };
 
-        fetchTrackingLogs();
-        const interval = setInterval(fetchTrackingLogs, 60000); // Refresh every minute
-        return () => clearInterval(interval); // Cleanup interval on unmount
+        loadTrackingLogs();
+        const interval = setInterval(loadTrackingLogs, 60000);
+        return () => clearInterval(interval);
     }, [tourId]);
 
-    // Determine status dynamically based on current time, proximity, and address
-    const getStatus = (date, latitude, longitude, locationName, locationCity) => {
-        const logTime = new Date(date);
-        const currentTime = new Date("2025-06-18T23:24:00+07:00"); // 11:24 PM +07
-        const timeDiff = (currentTime - logTime) / (1000 * 60); // Difference in minutes
-
-        // Check proximity (within 5 km using Haversine formula approximation)
-        const R = 6371e3; // Earth's radius in meters
-        const φ1 = (customerCoords.latitude * Math.PI) / 180;
-        const φ2 = (latitude * Math.PI) / 180;
-        const Δφ = ((latitude - customerCoords.latitude) * Math.PI) / 180;
-        const Δλ = ((longitude - customerCoords.longitude) * Math.PI) / 180;
-
-        const a =
-            Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
-            Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
-        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        const distance = R * c; // Distance in meters
-
-        // Address comparison (simplified match with location name or city)
-        const isAddressMatch =
-            customerCoords.address &&
-            (customerCoords.address.toLowerCase().includes(locationName.toLowerCase()) ||
-                customerCoords.address.toLowerCase().includes(locationCity.toLowerCase()));
-
-        if (customerCoords.latitude && customerCoords.longitude && distance <= 5000 && isAddressMatch) {
-            return "arrived"; // Within 5 km and address matches
-        } else if (customerCoords.latitude && customerCoords.longitude && distance <= 5000) {
-            return "arrived"; // Within 5 km, address match optional
-        }
-
-        // 15-minute threshold for "Đúng giờ" if no proximity or address match
-        return timeDiff > 15 ? "delayed" : "on time";
-    };
-
-    // Map tracking logs and customer location to determine status
-    const getLocationStatus = (location) => {
-        const matchingLog = trackingLogs.find(
-            (log) => log.latitude === location.latitude && log.longitude === location.longitude
-        );
-        if (matchingLog) {
-            return getStatus(
-                matchingLog.timestamp,
-                location.latitude,
-                location.longitude,
-                location.name,
-                location.city
-            );
-        }
-        return getStatus(location.dateStart, location.latitude, location.longitude, location.name, location.city); // Fallback to scheduled start time
-    };
-
-    // Get customer location using Geolocation API and reverse geocode with Nominatim
     const handleGetLocation = () => {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 async (position) => {
                     const { latitude, longitude } = position.coords;
-                    setCustomerCoords({ latitude, longitude, address: null }); // Set coords first
+                    setCustomerCoords({ latitude, longitude, address: null });
 
-                    // Reverse geocode using Nominatim API
                     try {
                         const response = await fetch(
                             `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`
                         );
-                        if (!response.ok) throw new Error("Failed to fetch address");
+                        if (!response.ok) throw new Error("Không lấy được địa chỉ");
                         const data = await response.json();
-                        const address = data.display_name || "Unknown address";
-                        setCustomerCoords((prev) => ({ ...prev, address }));
+                        setCustomerCoords((prev) => ({
+                            ...prev,
+                            address: data.display_name || "Unknown address",
+                        }));
                     } catch (err) {
                         setError("Không thể lấy địa chỉ: " + err.message);
                     }
@@ -161,12 +77,54 @@ const TrackingPage = () => {
         }
     };
 
+    const getStatus = (date, latitude, longitude, locationName, locationCity) => {
+        const logTime = new Date(date);
+        const currentTime = new Date("2025-06-18T23:24:00+07:00");
+        const timeDiff = (currentTime - logTime) / (1000 * 60);
+
+        const R = 6371e3;
+        const φ1 = (customerCoords.latitude * Math.PI) / 180;
+        const φ2 = (latitude * Math.PI) / 180;
+        const Δφ = ((latitude - customerCoords.latitude) * Math.PI) / 180;
+        const Δλ = ((longitude - customerCoords.longitude) * Math.PI) / 180;
+
+        const a =
+            Math.sin(Δφ / 2) ** 2 +
+            Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) ** 2;
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        const distance = R * c;
+
+        const isAddressMatch =
+            customerCoords.address &&
+            (customerCoords.address.toLowerCase().includes(locationName.toLowerCase()) ||
+                customerCoords.address.toLowerCase().includes(locationCity.toLowerCase()));
+
+        if (customerCoords.latitude && customerCoords.longitude && distance <= 5000) {
+            return "arrived";
+        }
+
+        return timeDiff > 15 ? "delayed" : "on time";
+    };
+
+    const getLocationStatus = (location) => {
+        const log = trackingLogs.find(
+            (log) => log.latitude === location.latitude && log.longitude === location.longitude
+        );
+        return getStatus(
+            log?.timestamp || location.dateStart,
+            location.latitude,
+            location.longitude,
+            location.name,
+            location.city
+        );
+    };
+
     return (
         <div className="tracking-page container mx-auto p-4">
             <div className="tour-header bg-white p-4 rounded shadow mb-4">
                 <div className="flex items-center justify-between">
                     <div>
-                        <h2 className="text-xl font-bold">Theo dõi Tour - ID: {tourId} (Tour vũng tàu)</h2>
+                        <h2 className="text-xl font-bold">Theo dõi Tour - ID: {tourId}</h2>
                     </div>
                     <div className="text-right">
                         <p className="text-gray-600">
@@ -192,19 +150,19 @@ const TrackingPage = () => {
                 <div className="timeline">
                     {locations.length > 0 ? (
                         locations.map((location) => {
-                            const isAtLocation = customerCoords.latitude && customerCoords.longitude;
-                            const R = 6371e3; // Earth's radius in meters
                             const φ1 = (customerCoords.latitude * Math.PI) / 180;
                             const φ2 = (location.latitude * Math.PI) / 180;
                             const Δφ = ((location.latitude - customerCoords.latitude) * Math.PI) / 180;
                             const Δλ = ((location.longitude - customerCoords.longitude) * Math.PI) / 180;
-
+                            const R = 6371e3;
                             const a =
-                                Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
-                                Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+                                Math.sin(Δφ / 2) ** 2 +
+                                Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) ** 2;
                             const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-                            const distance = R * c; // Distance in meters
+                            const distance = R * c;
                             const isMatch = distance <= 5000;
+
+                            const status = getLocationStatus(location);
 
                             return (
                                 <div key={location.id} className="timeline-item">
@@ -214,16 +172,16 @@ const TrackingPage = () => {
                                             {new Date(location.dateStart).toLocaleString()} -{" "}
                                             <span
                                                 className={
-                                                    getLocationStatus(location) === "arrived"
+                                                    status === "arrived"
                                                         ? "text-blue-600"
-                                                        : getLocationStatus(location) === "delayed"
+                                                        : status === "delayed"
                                                             ? "text-red-600"
                                                             : "text-green-600"
                                                 }
                                             >
-                                                {getLocationStatus(location) === "arrived"
+                                                {status === "arrived"
                                                     ? "Đã đến"
-                                                    : getLocationStatus(location) === "delayed"
+                                                    : status === "delayed"
                                                         ? "Đang trễ"
                                                         : "Đúng giờ"}
                                             </span>
@@ -232,18 +190,8 @@ const TrackingPage = () => {
                                         <p>Mô tả: {location.description}</p>
                                         <img src={location.image} alt={location.name} className="w-32 h-32 object-cover mt-2" />
                                         <div className="timeline-actions">
-                                            <button
-                                                className="btn-edit"
-                                                onClick={() => alert(`Edit location ${location.id}`)}
-                                            >
-                                                Chỉnh sửa
-                                            </button>
-                                            <button
-                                                className="btn-delete"
-                                                onClick={() => alert(`Delete location ${location.id}`)}
-                                            >
-                                                Xóa
-                                            </button>
+                                            <button className="btn-edit" onClick={() => alert(`Edit ${location.id}`)}>Chỉnh sửa</button>
+                                            <button className="btn-delete" onClick={() => alert(`Delete ${location.id}`)}>Xóa</button>
                                         </div>
                                     </div>
                                 </div>
@@ -256,14 +204,9 @@ const TrackingPage = () => {
             )}
 
             <div className="tour-actions mt-4 flex justify-between">
-                <button className="btn-continue" onClick={() => alert("Tiếp tục tour")}>
-                    Tiếp tục
-                </button>
-                <button className="btn-cancel" onClick={() => alert("Báo cáo hủy")}>
-                    Báo cáo hủy
-                </button>
+                <button className="btn-continue" onClick={() => alert("Tiếp tục tour")}>Tiếp tục</button>
+                <button className="btn-cancel" onClick={() => alert("Báo cáo hủy")}>Báo cáo hủy</button>
             </div>
-
             <button className="btn-end-tour mt-4 w-full" onClick={() => alert("Kết thúc Tour")}>
                 Kết thúc Tour
             </button>
