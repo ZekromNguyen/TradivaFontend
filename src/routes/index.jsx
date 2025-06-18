@@ -1,10 +1,10 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap-icons/font/bootstrap-icons.css';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { lazy, Suspense } from 'react';
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap-icons/font/bootstrap-icons.css";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { lazy, Suspense } from "react";
 
 // Layout
-import MainLayout from '../layouts/MainLayout';
+import MainLayout from "../layouts/MainLayout";
 
 // Component thường
 import ForgotPassword from '../components/auth/ForgotPassword/ForgotPassword';
@@ -37,11 +37,11 @@ const Loading = () => (
 // Router cấu hình
 const router = createBrowserRouter([
   {
-    path: '/',
+    path: "/",
     element: <MainLayout />,
     children: [
       {
-        path: '/',
+        path: "/",
         element: (
           <Suspense fallback={<Loading />}>
             <HomePage />
@@ -49,7 +49,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: '/login',
+        path: "/login",
         element: (
           <Suspense fallback={<Loading />}>
             <AuthPage />
@@ -57,7 +57,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: '/register',
+        path: "/register",
         element: (
           <Suspense fallback={<Loading />}>
             <AuthPage initialMode="register" />
@@ -65,7 +65,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: '/forgot-password',
+        path: "/forgot-password",
         element: (
           <Suspense fallback={<Loading />}>
             <ForgotPassword />
@@ -73,7 +73,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: '/tour/:id',
+        path: "/tour/:id",
         element: (
           <Suspense fallback={<Loading />}>
             <TourDetailPage />
@@ -81,17 +81,25 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: '/explore',
+        path: "/explore",
         element: (
           <Suspense fallback={<Loading />}>
             <ExplorePage />
           </Suspense>
         ),
       },
+      {
+        path: "/tracking/:id", // New route for tracking
+        element: (
+          <Suspense fallback={<Loading />}>
+            <TrackingPage />
+          </Suspense>
+        ),
+      },
     ],
   },
   {
-    path: '/guide',
+    path: "/guide",
     element: (
       <Suspense fallback={<Loading />}>
         <GuidePage />
@@ -99,7 +107,7 @@ const router = createBrowserRouter([
     ),
     children: [
       {
-        path: '',
+        path: "",
         element: (
           <Suspense fallback={<Loading />}>
             <TourguideDashboard />
@@ -115,7 +123,7 @@ const router = createBrowserRouter([
         element: <WithdrawRequest />,
       },
       {
-        path: 'tours',
+        path: "tours",
         element: (
           <Suspense fallback={<Loading />}>
             <Tour />
@@ -123,7 +131,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: 'detail/:id', // ➕ Đường dẫn mới
+        path: "detail/:id",
         element: (
           <Suspense fallback={<Loading />}>
             <TourDetailManage />
@@ -131,7 +139,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: 'support',
+        path: "support",
         element: (
           <Suspense fallback={<Loading />}>
             <Chatbot />
@@ -139,7 +147,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: 'violations',
+        path: "violations",
         element: <div className="violations-management-component">Vi phạm</div>,
       },
     ],

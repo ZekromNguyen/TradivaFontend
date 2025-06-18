@@ -6,7 +6,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
   const generatePageNumbers = () => {
     const pages = [];
     const showEllipsis = totalPages > 7;
-    
+
     if (!showEllipsis) {
       // Show all pages if 7 or fewer
       for (let i = 1; i <= totalPages; i++) {
@@ -30,7 +30,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
         pages.push(totalPages);
       }
     }
-    
+
     return pages;
   };
 
@@ -43,25 +43,24 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
       >
         Trước
       </button>
-      
+
       {generatePageNumbers().map((pageNum, idx) => (
         pageNum === '...' ? (
           <span key={idx} className="px-3 py-1">...</span>
         ) : (
           <button
             key={pageNum}
-            className={`px-3 py-1 rounded ${
-              currentPage === pageNum
+            className={`px-3 py-1 rounded ${currentPage === pageNum
                 ? "bg-blue-600 text-white"
                 : "bg-gray-200 hover:bg-gray-300"
-            }`}
+              }`}
             onClick={() => onPageChange(pageNum)}
           >
             {pageNum}
           </button>
         )
       ))}
-      
+
       <button
         className="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
         disabled={currentPage === totalPages}
