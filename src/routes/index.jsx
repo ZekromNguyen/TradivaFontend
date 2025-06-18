@@ -16,6 +16,7 @@ import PaymentHistory from '../components/guide/PaymentHistory/PaymentHistory';
 // Admin components
 import AdminDashboard from '../components/admin/Dashboard/Dashboard';
 import WithdrawalRequests from '../components/admin/WithdrawalRequests/WithdrawalRequests';
+import TrackingPage from '../pages/tracking/Tracking';
 
 // Lazy load pages
 const HomePage = lazy(() => import('../pages/HomePage/HomePage'));
