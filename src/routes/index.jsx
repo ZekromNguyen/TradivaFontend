@@ -10,6 +10,12 @@ import MainLayout from '../layouts/MainLayout';
 import ForgotPassword from '../components/auth/ForgotPassword/ForgotPassword';
 import TourguideDashboard from '../components/guide/Dashboard/Dashboard';
 import Chatbot from '../pages/GuidePage/chatbot/Chatbot';
+import WithdrawRequest from '../components/guide/WithdrawRequest/WithdrawRequest';
+import PaymentHistory from '../components/guide/PaymentHistory/PaymentHistory';
+
+// Admin components
+import AdminDashboard from '../components/admin/Dashboard/Dashboard';
+import WithdrawalRequests from '../components/admin/WithdrawalRequests/WithdrawalRequests';
 
 // Lazy load pages
 const HomePage = lazy(() => import('../pages/HomePage/HomePage'));
@@ -21,6 +27,7 @@ const TourDetailPage = lazy(() => import('../pages/TourDetailPage/TourDetailPage
 const ExplorePage = lazy(() => import('../pages/ExplorePage/ExplorePage'));
 const Tour = lazy(() => import('../pages/GuidePage/tours/Tour'));
 const TourDetailManage = lazy(() => import('../pages/GuidePage/detail/TourDetailManage'));
+const AdminPage = lazy(() => import('../pages/AdminPage/AdminPage'));
 
 // Component loading
 const Loading = () => (
@@ -101,7 +108,11 @@ const router = createBrowserRouter([
       },
       {
         path: 'payments',
-        element: <div className="payment-management-component">Quản lý thanh toán</div>,
+        element: <PaymentHistory />,
+      },
+      {
+        path: 'withdraw',
+        element: <WithdrawRequest />,
       },
       {
         path: 'tours',
@@ -130,6 +141,40 @@ const router = createBrowserRouter([
       {
         path: 'violations',
         element: <div className="violations-management-component">Vi phạm</div>,
+      },
+    ],
+  },
+  {
+    path: '/admin',
+    element: (
+      <Suspense fallback={<Loading />}>
+        <AdminPage />
+      </Suspense>
+    ),
+    children: [
+      {
+        path: '',
+        element: <AdminDashboard />,
+      },
+      {
+        path: 'withdrawals',
+        element: <WithdrawalRequests />,
+      },
+      {
+        path: 'users',
+        element: <div className="admin-users">Quản lý người dùng</div>,
+      },
+      {
+        path: 'tours',
+        element: <div className="admin-tours">Quản lý tour</div>,
+      },
+      {
+        path: 'reports',
+        element: <div className="admin-reports">Báo cáo</div>,
+      },
+      {
+        path: 'settings',
+        element: <div className="admin-settings">Cài đặt</div>,
       },
     ],
   },

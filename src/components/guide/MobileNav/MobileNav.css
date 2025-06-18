@@ -1,0 +1,95 @@
+/* Guide Mobile Navigation */
+.guide-mobile-nav {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #ffffff;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 900;
+  height: 60px;
+  padding: 0 10px;
+}
+
+/* Show only on mobile */
+@media (max-width: 768px) {
+  .guide-mobile-nav {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+  }
+  
+  /* Adjust main content for bottom nav */
+  .guide-dashboard,
+  .withdraw-request-container,
+  .payment-history-container {
+    padding-bottom: 80px !important;
+  }
+}
+
+/* Navigation Items */
+.guide-mobile-nav .nav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  color: #718096;
+  text-decoration: none;
+  padding: 8px;
+  border-radius: 8px;
+  transition: all 0.2s;
+  position: relative;
+}
+
+.guide-mobile-nav .nav-item:hover {
+  color: #4a5568;
+  background-color: #f7fafc;
+}
+
+.guide-mobile-nav .nav-item.active {
+  color: #667eea;
+  font-weight: 600;
+}
+
+.guide-mobile-nav .nav-item.active::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 30px;
+  height: 3px;
+  background-color: #667eea;
+  border-radius: 0 0 3px 3px;
+}
+
+/* Icons */
+.guide-mobile-nav .nav-item i {
+  font-size: 1.3rem;
+}
+
+/* Text */
+.guide-mobile-nav .nav-item span {
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+
+/* Active animation */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.guide-mobile-nav .nav-item:active i {
+  animation: pulse 0.3s ease-in-out;
+} 

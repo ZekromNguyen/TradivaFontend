@@ -14,7 +14,8 @@ export default function Sidebar() {
     { path: '/guide/tours', icon: '🎯', label: 'Quản lý Tour', badge: '12' },
     { path: '/guide/support', icon: '🤖', label: 'AI hỗ trợ', badge: null },
     { path: '/guide/chat', icon: '💬', label: 'Chat với khách', badge: '3' },
-    { path: '/guide/payments', icon: '💳', label: 'Thanh toán', badge: null },
+    { path: '/guide/payments', icon: '💰', label: 'Lịch sử rút tiền', badge: null },
+    { path: '/guide/withdraw', icon: '💵', label: 'Yêu cầu rút tiền', badge: null },
     { path: '/guide/feedback', icon: '⭐', label: 'Đánh giá', badge: null },
   ];
 

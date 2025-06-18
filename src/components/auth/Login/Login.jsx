@@ -86,6 +86,8 @@ const Login = ({ onSwitchToRegister }) => {
           navigate('/');
         } else if (role === 'Guide') {
           navigate('/guide');
+        } else if (role === 'Admin') {
+          navigate('/admin');
         } else {
           navigate('/'); // Default route for unrecognized roles
         }

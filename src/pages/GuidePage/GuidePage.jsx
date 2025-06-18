@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Dashboard from '../../components/guide/Dashboard/Dashboard';
 import './GuidePage.css';
 
@@ -9,8 +9,19 @@ import '../../styles/colors.css';
 import '../../styles/sidebar-overrides.css';
 import { Outlet } from 'react-router-dom';
 import Sidebar from '../../components/guide/Dashboard/Sidebar/Sidebar';
+import GuideMobileNav from '../../components/guide/MobileNav/MobileNav';
 
 const GuidePage = () => {
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   return (
     <div className="tour-route-container">
       <Sidebar />
@@ -19,6 +30,7 @@ const GuidePage = () => {
           <Outlet />
         </div>
       </div>
+      {isMobile && <GuideMobileNav />}
     </div>
   );
 };
