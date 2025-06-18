@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import {
   createTourApi,
@@ -284,7 +285,6 @@ export default function ManageTourGuide() {
   const validateForm = () => {
     const errors = {};
     if (!newTour.title) errors.title = "Tên tour là bắt buộc";
-    if (!newTour.locationCity) errors.locationCity = "Thành phố là bắt buộc";
     if (!newTour.duration) errors.duration = "Thời gian là bắt buộc";
     if (!newTour.pricePerPerson) errors.pricePerPerson = "Giá là bắt buộc";
     if (!newTour.numberOfPeople)
@@ -386,6 +386,7 @@ export default function ManageTourGuide() {
           if (location.images && location.images.length > 0) {
             imageUrls = await uploadImagesToCloudinary(location.images);
           }
+
           const primaryImage =
             imageUrls[0] ||
             "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=300&h=200&fit=crop";
@@ -450,6 +451,7 @@ export default function ManageTourGuide() {
       setImageFile(null);
       setFormErrors({});
       setUploadError(null);
+
       alert("Thêm tour thành công!");
     } catch (error) {
       let errorMessage = "Vui lòng thử lại.";

@@ -1,26 +1,27 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap-icons/font/bootstrap-icons.css';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { lazy, Suspense } from 'react';
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap-icons/font/bootstrap-icons.css";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { lazy, Suspense } from "react";
 
 // Layout
-import MainLayout from '../layouts/MainLayout';
+import MainLayout from "../layouts/MainLayout";
 
 // Component thường
-import ForgotPassword from '../components/auth/ForgotPassword/ForgotPassword';
-import TourguideDashboard from '../components/guide/Dashboard/Dashboard';
-import Chatbot from '../pages/GuidePage/chatbot/Chatbot';
+import ForgotPassword from "../components/auth/ForgotPassword/ForgotPassword";
+import TourguideDashboard from "../components/guide/Dashboard/Dashboard";
+import Chatbot from "../pages/GuidePage/chatbot/Chatbot";
 
 // Lazy load pages
-const HomePage = lazy(() => import('../pages/HomePage/HomePage'));
-const AuthPage = lazy(() => import('../pages/AuthPage/AuthPage'));
-const GuidePage = lazy(() => import('../pages/GuidePage/GuidePage'));
-const PaymentPage = lazy(() => import('../pages/Payment/PaymentPage'));
-const TourAdmin = lazy(() => import('../pages/GuidePage/GuidePage'));
-const TourDetailPage = lazy(() => import('../pages/TourDetailPage/TourDetailPage'));
-const ExplorePage = lazy(() => import('../pages/ExplorePage/ExplorePage'));
-const Tour = lazy(() => import('../pages/GuidePage/tours/Tour'));
-const TourDetailManage = lazy(() => import('../pages/GuidePage/detail/TourDetailManage'));
+const HomePage = lazy(() => import("../pages/HomePage/HomePage"));
+const AuthPage = lazy(() => import("../pages/AuthPage/AuthPage"));
+const GuidePage = lazy(() => import("../pages/GuidePage/GuidePage"));
+const PaymentPage = lazy(() => import("../pages/Payment/PaymentPage"));
+const TourAdmin = lazy(() => import("../pages/GuidePage/GuidePage"));
+const TourDetailPage = lazy(() => import("../pages/TourDetailPage/TourDetailPage"));
+const ExplorePage = lazy(() => import("../pages/ExplorePage/ExplorePage"));
+const Tour = lazy(() => import("../pages/GuidePage/tours/Tour"));
+const TourDetailManage = lazy(() => import("../pages/GuidePage/detail/TourDetailManage"));
+const TrackingPage = lazy(() => import("../pages/tracking/Tracking")); // Adjust path as needed
 
 // Component loading
 const Loading = () => (
@@ -30,11 +31,11 @@ const Loading = () => (
 // Router cấu hình
 const router = createBrowserRouter([
   {
-    path: '/',
+    path: "/",
     element: <MainLayout />,
     children: [
       {
-        path: '/',
+        path: "/",
         element: (
           <Suspense fallback={<Loading />}>
             <HomePage />
@@ -42,7 +43,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: '/login',
+        path: "/login",
         element: (
           <Suspense fallback={<Loading />}>
             <AuthPage />
@@ -50,7 +51,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: '/register',
+        path: "/register",
         element: (
           <Suspense fallback={<Loading />}>
             <AuthPage initialMode="register" />
@@ -58,7 +59,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: '/forgot-password',
+        path: "/forgot-password",
         element: (
           <Suspense fallback={<Loading />}>
             <ForgotPassword />
@@ -66,7 +67,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: '/tour/:id',
+        path: "/tour/:id",
         element: (
           <Suspense fallback={<Loading />}>
             <TourDetailPage />
@@ -74,17 +75,25 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: '/explore',
+        path: "/explore",
         element: (
           <Suspense fallback={<Loading />}>
             <ExplorePage />
           </Suspense>
         ),
       },
+      {
+        path: "/tracking/:id", // New route for tracking
+        element: (
+          <Suspense fallback={<Loading />}>
+            <TrackingPage />
+          </Suspense>
+        ),
+      },
     ],
   },
   {
-    path: '/guide',
+    path: "/guide",
     element: (
       <Suspense fallback={<Loading />}>
         <GuidePage />
@@ -92,7 +101,7 @@ const router = createBrowserRouter([
     ),
     children: [
       {
-        path: '',
+        path: "",
         element: (
           <Suspense fallback={<Loading />}>
             <TourguideDashboard />
@@ -100,11 +109,11 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: 'payments',
+        path: "payments",
         element: <div className="payment-management-component">Quản lý thanh toán</div>,
       },
       {
-        path: 'tours',
+        path: "tours",
         element: (
           <Suspense fallback={<Loading />}>
             <Tour />
@@ -112,7 +121,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: 'detail/:id', // ➕ Đường dẫn mới
+        path: "detail/:id",
         element: (
           <Suspense fallback={<Loading />}>
             <TourDetailManage />
@@ -120,7 +129,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: 'support',
+        path: "support",
         element: (
           <Suspense fallback={<Loading />}>
             <Chatbot />
@@ -128,7 +137,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: 'violations',
+        path: "violations",
         element: <div className="violations-management-component">Vi phạm</div>,
       },
     ],
