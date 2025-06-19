@@ -29,6 +29,7 @@ const ExplorePage = lazy(() => import('../pages/ExplorePage/ExplorePage'));
 const Tour = lazy(() => import('../pages/GuidePage/tours/Tour'));
 const TourDetailManage = lazy(() => import('../pages/GuidePage/detail/TourDetailManage'));
 const AdminPage = lazy(() => import('../pages/AdminPage/AdminPage'));
+const TourHistory = lazy(() => import('../pages/History/History'));
 
 // Component loading
 const Loading = () => (
@@ -86,6 +87,14 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<Loading />}>
             <ExplorePage />
+          </Suspense>
+        ),
+      },
+      {
+        path: "/history",
+        element: (
+          <Suspense fallback={<Loading />}>
+            <TourHistory />
           </Suspense>
         ),
       },

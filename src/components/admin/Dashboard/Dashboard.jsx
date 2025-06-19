@@ -1,19 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Card, 
-  Row, 
-  Col, 
-  Statistic, 
-  List, 
-  Avatar, 
-  Button, 
-  Typography, 
-  Space, 
-  Tag, 
+import {
+  Card,
+  Row,
+  Col,
+  Statistic,
+  List,
+  Avatar,
+  Button,
+  Typography,
+  Space,
+  Tag,
   Progress,
   Tooltip,
   Divider,
-  Alert
+  Alert,
+  Spin
 } from 'antd';
 import {
   UserOutlined,
@@ -37,8 +38,10 @@ import {
 const { Title, Text } = Typography;
 
 const Dashboard = () => {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [dashboardData, setDashboardData] = useState(null);
+  const [error, setError] = useState(null);
 
   // Update time every minute
   useEffect(() => {
@@ -49,96 +52,164 @@ const Dashboard = () => {
     return () => clearInterval(timer);
   }, []);
 
-  // Mock data for dashboard
-  const statsData = [
-    {
-      title: 'Tổng người dùng',
-      value: 1234,
-      precision: 0,
-      prefix: <UserOutlined className="text-blue-500" />,
-      suffix: '',
-      trend: 'up',
-      change: 12.5,
-      color: 'blue',
-      bgColor: 'bg-blue-50',
-      borderColor: 'border-blue-200'
-    },
-    {
-      title: 'Yêu cầu rút tiền',
-      value: 23,
-      precision: 0,
-      prefix: <DollarOutlined className="text-orange-500" />,
-      suffix: '',
-      trend: 'up',
-      change: 5.2,
-      color: 'orange',
-      bgColor: 'bg-orange-50',
-      borderColor: 'border-orange-200'
-    },
+  // Fetch dashboard data from API
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        const token = localStorage.getItem("accessToken");
+        let fromDate, toDate;
+
+        // Sử dụng giá trị từ API nếu có, nếu không tính mặc định
+        const now = new Date();
+        fromDate = new Date(now.setMonth(now.getMonth() - 1)).toISOString() // YYYY-MM-DD
+        toDate = new Date().toISOString(); // YYYY-MM-DD, có thể thay đổi sau
+
+        // Gửi request với fromDate và toDate
+        const response = await fetch('https://tradivabe.felixtien.dev/api/Dashboard/combined-statistics', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+            'Accept': '*/*',
+          },
+          body: JSON.stringify({
+            fromDate,
+            toDate,
+            statisticType: 1
+          }),
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(`HTTP ${response.status}: ${errorText || 'Bad Request'}`);
+        }
+
+        const data = await response.json();
+        console.log('API Data - fromDate:', data.fromDate, 'toDate:', data.toDate, 'Total Revenue:', data.paymentSummary.totalRevenue); // Debug
+        setDashboardData(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDashboardData();
+  }, []);
+
+  // Handle refresh
+  const handleRefresh = () => {
+    setLoading(true);
+    setError(null);
+    setDashboardData(null);
+    fetchDashboardData();
+  };
+
+  // Format numbers and currency
+  const formatNumber = (num) => {
+    return new Intl.NumberFormat('vi-VN').format(num);
+  };
+
+  const formatCurrency = (amount) => {
+    const formatted = new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND'
+    }).format(amount);
+    console.log('Formatted Revenue Input:', amount, 'Output:', formatted); // Debug
+    return formatted;
+  };
+
+  // Calculate trend change
+  const calculateTrend = (currentValue, previousValue) => {
+    if (!previousValue || previousValue === 0) return 0;
+    const change = ((currentValue - previousValue) / previousValue) * 100;
+    return Math.round(change * 10) / 10;
+  };
+
+  // Dynamically generate stats data from API
+  const statsData = dashboardData ? [
     {
       title: 'Tổng số tour',
-      value: 456,
+      value: dashboardData.tourSummary.totalMatches,
       precision: 0,
       prefix: <EnvironmentOutlined className="text-green-500" />,
       suffix: '',
-      trend: 'up',
-      change: 8.1,
+      trend: dashboardData.tourSummary.totalMatches >= (dashboardData.tourSummary.statistics.slice(0, -1).reduce((acc, curr) => acc + curr.totalMatches, 0) || 1) ? 'up' : 'down',
+      change: calculateTrend(
+        dashboardData.tourSummary.totalMatches,
+        dashboardData.tourSummary.statistics.slice(0, -1).reduce((acc, curr) => acc + curr.totalMatches, 0) || 1
+      ),
       color: 'green',
       bgColor: 'bg-green-50',
       borderColor: 'border-green-200'
     },
     {
-      title: 'Doanh thu tháng',
-      value: 123400000,
+      title: 'Tổng yêu cầu thanh toán',
+      value: dashboardData.paymentSummary.totalPayments,
+      precision: 0,
+      prefix: <DollarOutlined className="text-orange-500" />,
+      suffix: '',
+      trend: dashboardData.paymentSummary.totalPayments >= (dashboardData.paymentSummary.statistics.slice(0, -1).reduce((acc, curr) => acc + curr.totalPayments, 0) || 1) ? 'up' : 'down',
+      change: calculateTrend(
+        dashboardData.paymentSummary.totalPayments,
+        dashboardData.paymentSummary.statistics.slice(0, -1).reduce((acc, curr) => acc + curr.totalPayments, 0) || 1
+      ),
+      color: 'orange',
+      bgColor: 'bg-orange-50',
+      borderColor: 'border-orange-200'
+    },
+    {
+      title: 'Yêu cầu chờ xử lý',
+      value: dashboardData.paymentSummary.statusDistribution.Pending,
+      precision: 0,
+      prefix: <ClockCircleOutlined className="text-yellow-500" />,
+      suffix: '',
+      trend: dashboardData.paymentSummary.statusDistribution.Pending >= (dashboardData.paymentSummary.statistics.slice(0, -1).reduce((acc, curr) => acc + curr.pendingPayments, 0) || 1) ? 'up' : 'down',
+      change: calculateTrend(
+        dashboardData.paymentSummary.statusDistribution.Pending,
+        dashboardData.paymentSummary.statistics.slice(0, -1).reduce((acc, curr) => acc + curr.pendingPayments, 0) || 1
+      ),
+      color: 'yellow',
+      bgColor: 'bg-yellow-50',
+      borderColor: 'border-yellow-200'
+    },
+    {
+      title: 'Doanh thu tổng',
+      value: dashboardData.paymentSummary.totalRevenue,
       precision: 0,
       prefix: '',
-      suffix: '₫',
-      trend: 'up',
-      change: 25.3,
+      trend: dashboardData.paymentSummary.totalRevenue >= (dashboardData.paymentSummary.statistics.slice(0, -1).reduce((acc, curr) => acc + curr.totalAmount, 0) || 1) ? 'up' : 'down',
+      change: calculateTrend(
+        dashboardData.paymentSummary.totalRevenue,
+        dashboardData.paymentSummary.statistics.slice(0, -1).reduce((acc, curr) => acc + curr.totalAmount, 0) || 1
+      ),
       color: 'purple',
       bgColor: 'bg-purple-50',
       borderColor: 'border-purple-200'
     }
-  ];
+  ] : [];
 
-  const recentActivities = [
+  // Dynamically generate recent activities
+  const recentActivities = dashboardData ? [
     {
       id: 1,
-      type: 'user',
-      title: 'Người dùng mới đăng ký',
-      description: 'Nguyễn Văn A vừa tạo tài khoản',
-      time: '5 phút trước',
-      avatar: <UserOutlined />,
-      color: 'blue'
-    },
-    {
-      id: 2,
-      type: 'withdrawal',
-      title: 'Yêu cầu rút tiền mới',
-      description: 'Guide Trần Thị B yêu cầu rút 2.5M VNĐ',
-      time: '10 phút trước',
-      avatar: <DollarOutlined />,
-      color: 'orange'
-    },
-    {
-      id: 3,
       type: 'tour',
       title: 'Tour mới được tạo',
-      description: 'Tour "Hà Nội - Sapa 3N2Đ" đã được phê duyệt',
-      time: '30 phút trước',
+      description: `Tour "${dashboardData.tourSummary.statistics[dashboardData.tourSummary.statistics.length - 1]?.period}" có ${dashboardData.tourSummary.totalMatches} matches`,
+      time: 'Vừa xong',
       avatar: <EnvironmentOutlined />,
       color: 'green'
     },
     {
-      id: 4,
-      type: 'review',
-      title: 'Đánh giá mới',
-      description: 'Tour "Phú Quốc" nhận được 5 sao',
-      time: '1 giờ trước',
-      avatar: <StarOutlined />,
-      color: 'purple'
+      id: 2,
+      type: 'payment',
+      title: 'Yêu cầu thanh toán mới',
+      description: `Tổng ${dashboardData.paymentSummary.totalPayments} yêu cầu, ${dashboardData.paymentSummary.statusDistribution.Pending} đang chờ`,
+      time: 'Vừa xong',
+      avatar: <DollarOutlined />,
+      color: 'orange'
     }
-  ];
+  ] : [];
 
   const quickActions = [
     {
@@ -171,23 +242,31 @@ const Dashboard = () => {
     }
   ];
 
-  const handleRefresh = () => {
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-    }, 1000);
-  };
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <Spin size="large" />
+      </div>
+    );
+  }
 
-  const formatNumber = (num) => {
-    return new Intl.NumberFormat('vi-VN').format(num);
-  };
-
-  const formatCurrency = (amount) => {
-    return new Intl.NumberFormat('vi-VN', {
-      style: 'currency',
-      currency: 'VND'
-    }).format(amount);
-  };
+  if (error) {
+    return (
+      <div className="p-6">
+        <Alert
+          message="Lỗi"
+          description={`Không thể tải dữ liệu: ${error}`}
+          type="error"
+          showIcon
+          action={
+            <Button type="link" onClick={handleRefresh} icon={<ReloadOutlined />}>
+              Thử lại
+            </Button>
+          }
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -224,10 +303,10 @@ const Dashboard = () => {
           <div className="flex items-center gap-4">
             <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
               <div className="text-white/80 text-sm font-medium">Hiệu suất hôm nay</div>
-              <div className="text-white text-2xl font-bold mt-1">+15.3%</div>
+              <div className="text-white text-2xl font-bold mt-1">+{statsData[0]?.change || 0}%</div>
             </div>
-            <Button 
-              type="primary" 
+            <Button
+              type="primary"
               size="large"
               icon={<ReloadOutlined />}
               onClick={handleRefresh}
@@ -244,7 +323,7 @@ const Dashboard = () => {
       <Row gutter={[24, 24]}>
         {statsData.map((stat, index) => (
           <Col xs={24} sm={12} lg={6} key={index}>
-            <Card 
+            <Card
               className={`${stat.bgColor} border-0 hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 group relative overflow-hidden`}
               bodyStyle={{ padding: '28px' }}
             >
@@ -267,8 +346,8 @@ const Dashboard = () => {
                     precision={stat.precision}
                     prefix=""
                     suffix={stat.suffix}
-                    valueStyle={{ 
-                      fontSize: '32px', 
+                    valueStyle={{
+                      fontSize: '32px',
                       fontWeight: '800',
                       color: '#1f2937',
                       lineHeight: '1.2'
@@ -301,7 +380,7 @@ const Dashboard = () => {
       <Row gutter={[24, 24]}>
         {/* Recent Activities */}
         <Col xs={24} lg={14}>
-          <Card 
+          <Card
             title={
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
@@ -310,9 +389,9 @@ const Dashboard = () => {
                   </div>
                   <span className="text-xl font-bold text-gray-800">Hoạt động gần đây</span>
                 </div>
-                <Button 
-                  type="text" 
-                  icon={<EyeOutlined />} 
+                <Button
+                  type="text"
+                  icon={<EyeOutlined />}
                   size="small"
                   className="text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg"
                 >
@@ -337,7 +416,7 @@ const Dashboard = () => {
                 >
                   <List.Item.Meta
                     avatar={
-                      <Avatar 
+                      <Avatar
                         icon={item.avatar}
                         className={`bg-${item.color}-100 text-${item.color}-600 border-${item.color}-200 border-2`}
                       />
@@ -366,7 +445,7 @@ const Dashboard = () => {
 
         {/* Quick Actions */}
         <Col xs={24} lg={10}>
-          <Card 
+          <Card
             title={
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
@@ -375,7 +454,7 @@ const Dashboard = () => {
                   </div>
                   <span className="text-xl font-bold text-gray-800">Thao tác nhanh</span>
                 </div>
-                <Tag color="blue" className="px-3 py-1 rounded-lg font-semibold">4 thao tác</Tag>
+                <Tag color="blue" className="px-3 py-1 rounded-lg font-semibold">{quickActions.length} thao tác</Tag>
               </div>
             }
             className="h-full shadow-lg border-0 rounded-2xl"
@@ -412,7 +491,7 @@ const Dashboard = () => {
       {/* System Status */}
       <Row gutter={[24, 24]}>
         <Col xs={24} lg={12}>
-          <Card 
+          <Card
             title={
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-600 rounded-lg flex items-center justify-center">
@@ -420,7 +499,7 @@ const Dashboard = () => {
                 </div>
                 <span className="text-xl font-bold text-gray-800">Tình trạng hệ thống</span>
               </div>
-            } 
+            }
             className="h-full shadow-lg border-0 rounded-2xl"
             bodyStyle={{ padding: '24px' }}
           >
@@ -451,7 +530,7 @@ const Dashboard = () => {
         </Col>
 
         <Col xs={24} lg={12}>
-          <Card 
+          <Card
             title={
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 bg-gradient-to-br from-orange-500 to-red-600 rounded-lg flex items-center justify-center">
@@ -493,4 +572,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard; 
+export default Dashboard;
