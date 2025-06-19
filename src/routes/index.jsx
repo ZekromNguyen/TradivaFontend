@@ -30,6 +30,8 @@ const Tour = lazy(() => import('../pages/GuidePage/tours/Tour'));
 const TourDetailManage = lazy(() => import('../pages/GuidePage/detail/TourDetailManage'));
 const AdminPage = lazy(() => import('../pages/AdminPage/AdminPage'));
 const TourHistory = lazy(() => import('../pages/History/History'));
+const RegisterPage = lazy(() => import('../pages/registerGuide/RegisterGuide'));
+
 
 // Component loading
 const Loading = () => (
@@ -63,6 +65,14 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<Loading />}>
             <AuthPage initialMode="register" />
+          </Suspense>
+        ),
+      },
+      {
+        path: "/registerGuide",
+        element: (
+          <Suspense fallback={<Loading />}>
+            <RegisterPage />
           </Suspense>
         ),
       },

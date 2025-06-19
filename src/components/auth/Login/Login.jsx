@@ -259,6 +259,13 @@ const Login = ({ onSwitchToRegister }) => {
             Đăng ký ngay
           </Link>
         </motion.p>
+
+        <motion.p className="mt-8 text-center text-sm text-gray-600" variants={itemVariants}>
+          Muốn làm hướng dẫn viên?{' '}
+          <Link to="/registerGuide" className="font-medium text-primary hover:text-primary-dark link-animation">
+            Đăng ký tại đây
+          </Link>
+        </motion.p>
       </motion.div>
     </div>
   );
