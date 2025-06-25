@@ -5,6 +5,7 @@ import {
   deleteTourApi,
   getTourById,
   getTours,
+  getToursWithGuide,
   updateTourApi,
   uploadFile,
 } from "../../../api/tourAPI";
@@ -14,6 +15,7 @@ import { useNavigate } from "react-router-dom";
 import TourFilter from "../../../components/manageTour/TourFilter";
 import TourTable from "../../../components/manageTour/TourTable";
 import TourModal from "../../../components/manageTour/TourModal";
+import { useAuth } from "../../../context/AuthContext";
 
 export default function ManageTourGuide() {
   const navigate = useNavigate();
@@ -65,6 +67,7 @@ export default function ManageTourGuide() {
   const suggestionTimeoutRef = useRef(null);
   const [editingTour, setEditingTour] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
+  const auth = useAuth();
 
   const CLOUDINARY_UPLOAD_URL = `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUD_NAME
     }/image/upload`;
@@ -147,7 +150,7 @@ export default function ManageTourGuide() {
     const fetchTours = async () => {
       try {
         setLoading(true);
-        const tourData = await getTours();
+        const tourData = await getToursWithGuide({userId: auth.user.id});
         if (isMounted) {
           const formattedTours = formatTours(tourData);
           setTours(formattedTours);
@@ -404,6 +407,8 @@ export default function ManageTourGuide() {
       );
 
       const formData = new FormData();
+      console.log("User ID:", auth.user.id);
+      formData.append("userId", auth.user.id)
       formData.append("Title", newTour.title);
       formData.append("Description", newTour.description);
       formData.append("Duration", newTour.duration);

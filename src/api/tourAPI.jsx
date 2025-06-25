@@ -33,6 +33,37 @@ export const getTours = async ({
   }
 };
 
+export const getToursWithGuide = async ({
+  userId,
+  sortBy = "Date",
+  isDescending = true,
+  pageNumber = 1,
+  pageSize = 100
+} = []) => {
+  const url = `${API_BASE}/GetToursByGuideId?Pagination.SortBy=${sortBy}&Pagination.IsDescending=${isDescending}&Pagination.PageNumber=${pageNumber}&Pagination.PageSize=${pageSize}&UserId=${userId}`;
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    const data = await response.json();
+    if (Array.isArray(data)) {
+      return data;
+    } else if (data && Array.isArray(data.items)) {
+      return data.items; // Extract the 'items' array
+    } else if (data && Array.isArray(data.tours)) {
+      return data.tours; // Support for 'tours' for backward compatibility
+    } else {
+      console.warn("Unexpected data format from API:", data);
+      return [];
+    }
+  } catch (error) {
+    console.error("Failed to fetch tours:", error);
+    return [];
+  }
+};
+
+
 export const fetchTours = async ({
   sortBy = "Date",
   isDescending = false,
