@@ -17,6 +17,8 @@ import PaymentHistory from '../components/guide/PaymentHistory/PaymentHistory';
 import AdminDashboard from '../components/admin/Dashboard/Dashboard';
 import WithdrawalRequests from '../components/admin/WithdrawalRequests/WithdrawalRequests';
 import TrackingPage from '../pages/tracking/Tracking';
+import GuideCustomerPage from "../pages/GuideCustomerPage/GuideCustomerPage";
+import GuideDetailPage from "../pages/guideDetailPage/GuideDetailPage";
 
 // Lazy load pages
 const HomePage = lazy(() => import('../pages/HomePage/HomePage'));
@@ -97,6 +99,22 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<Loading />}>
             <ExplorePage />
+          </Suspense>
+        ),
+      },
+      {
+        path: "/guides",
+        element: (
+          <Suspense fallback={<Loading />}>
+            <GuideCustomerPage />
+          </Suspense>
+        ),
+      },
+      {
+        path: "/guide/:id",
+        element: (
+          <Suspense fallback={<Loading />}>
+            <GuideDetailPage />
           </Suspense>
         ),
       },
