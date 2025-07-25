@@ -1,5 +1,5 @@
 import React from "react";
-import GuideCard from "../GuideCard/GuideCard";
+import GuideCard from "../guideCard/GuideCard";
 // import LoadingSpinner from "../../LoadingSpinner/LoadingSpinner";
 
 const GuideGrid = ({ guides, isLoading, error, onViewDetail, onRetry, onClearFilters }) => {
