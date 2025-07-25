@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { fetchGuides } from "../../api/guideAPI";
 import GuideFilterSidebar from "../../components/guideCustomer/guideFilterSidebar/GuideFilterSidebar";
-import GuideGrid from "../../components/guideCustomer/GuideGrid/GuideGrid";
+import GuideGrid from "../../components/guideCustomer/guideGrid/GuideGrid";
 import Pagination from "../../components/Pagination/Pagination";
 import GuidePageHeader from "../../components/guideCustomer/header/GuidePageHeader";
 import "./GuideCustomerPage.css";
