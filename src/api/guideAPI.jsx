@@ -28,7 +28,7 @@ export const fetchGuides = async (params) => {
   });
 
   const response = await fetch(
-    `https://tradivabe.felixtien.dev//api/Auth/getListGuide?${queryParams}`
+    `https://tradivabe.felixtien.dev/api/Auth/getListGuide?${queryParams}`
   );
 
   if (!response.ok) {
@@ -40,7 +40,7 @@ export const fetchGuides = async (params) => {
 
 export const fetchGuideById = async (guideId) => {
   try {
-    const response = await fetch(`https://tradivabe.felixtien.dev//api/Auth/getGuideById/${guideId}`, {
+    const response = await fetch(`https://tradivabe.felixtien.dev/api/Auth/getGuideById/${guideId}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
